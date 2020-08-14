@@ -1,6 +1,13 @@
-summits <- read.delim("C:/Users/Caleb/Desktop/Work/ATAC-seq/NA_summits.bed", header = F)
+###### INPUT ARGUEMENTS#########
+args <- commandArgs(trailingOnly = T)
 
-genes <- read.delim("C:/Users/Caleb/Desktop/Work/ATAC-seq/genes.bed", header = F)
+inputSummits <- args[1]
+inputGenes <- args[2]
+outdir <- args[3]
+
+summits <- read.delim(inputSummits, header = F)
+
+genes <- read.delim(inputGenes, header = F)
 
 outFile <- c()
 
@@ -32,38 +39,38 @@ for (i in chrGroups){
 
 #write.table(data.frame(outFile), "C:/Users/Caleb/Desktop/Work/ATAC-seq/summitGeneIntersect.tsv")
 outFile <- data.frame(outFile)
-write.table(outFile, "C:/Users/Caleb/Desktop/Work/ATAC-seq/upstreamPeaks.tsv", row.names = F)
+write.table(outFile, paste(outdir, "upstremPeaks.tsv", sep = ""), row.names = F)
 
 ##########################
 ##SEQUENCE DETERMINATION
 ##########################
 library(Biostrings)
 
-chr1 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr1.fa.gz",format="fasta")[1]
-chr2 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr2.fa.gz",format="fasta")[1]
-chr3 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr3.fa.gz",format="fasta")[1]
-chr4 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr4.fa.gz",format="fasta")[1]
-chr5 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr5.fa.gz",format="fasta")[1]
-chr6 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr6.fa.gz",format="fasta")[1]
-chr7 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr7.fa.gz",format="fasta")[1]
-chr8 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr8.fa.gz",format="fasta")[1]
-chr9 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr9.fa.gz",format="fasta")[1]
-chr10 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr10.fa.gz",format="fasta")[1]
-chr11 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr11.fa.gz",format="fasta")[1]
-chr12 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr12.fa.gz",format="fasta")[1]
-chr13 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr13.fa.gz",format="fasta")[1]
-chr14 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr14.fa.gz",format="fasta")[1]
-chr15 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr15.fa.gz",format="fasta")[1]
-chr16 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr16.fa.gz",format="fasta")[1]
-chr17 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr17.fa.gz",format="fasta")[1]
-chr18 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr18.fa.gz",format="fasta")[1]
-chr19 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr19.fa.gz",format="fasta")[1]
-chr20 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr20.fa.gz",format="fasta")[1]
-chr21 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr21.fa.gz",format="fasta")[1]
-chr22 <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chr22.fa.gz",format="fasta")[1]
-chrX <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chrX.fa.gz",format="fasta")[1]
-chrY <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chrY.fa.gz",format="fasta")[1]
-chrM <- readDNAStringSet("C:/Users/Caleb/Desktop/Work/Hg38/chrM.fa.gz",format="fasta")[1]
+chr1 <- readDNAStringSet("HG38/chr1.fa.gz",format="fasta")[1]
+chr2 <- readDNAStringSet("HG38/chr2.fa.gz",format="fasta")[1]
+chr3 <- readDNAStringSet("HG38/chr3.fa.gz",format="fasta")[1]
+chr4 <- readDNAStringSet("HG38/chr4.fa.gz",format="fasta")[1]
+chr5 <- readDNAStringSet("HG38/chr5.fa.gz",format="fasta")[1]
+chr6 <- readDNAStringSet("HG38/chr6.fa.gz",format="fasta")[1]
+chr7 <- readDNAStringSet("HG38/chr7.fa.gz",format="fasta")[1]
+chr8 <- readDNAStringSet("HG38/chr8.fa.gz",format="fasta")[1]
+chr9 <- readDNAStringSet("HG38/chr9.fa.gz",format="fasta")[1]
+chr10 <- readDNAStringSet("HG38/chr10.fa.gz",format="fasta")[1]
+chr11 <- readDNAStringSet("HG38/chr11.fa.gz",format="fasta")[1]
+chr12 <- readDNAStringSet("HG38/chr12.fa.gz",format="fasta")[1]
+chr13 <- readDNAStringSet("HG38/chr13.fa.gz",format="fasta")[1]
+chr14 <- readDNAStringSet("HG38/chr14.fa.gz",format="fasta")[1]
+chr15 <- readDNAStringSet("HG38/chr15.fa.gz",format="fasta")[1]
+chr16 <- readDNAStringSet("HG38/chr16.fa.gz",format="fasta")[1]
+chr17 <- readDNAStringSet("HG38/chr17.fa.gz",format="fasta")[1]
+chr18 <- readDNAStringSet("HG38/chr18.fa.gz",format="fasta")[1]
+chr19 <- readDNAStringSet("HG38/chr19.fa.gz",format="fasta")[1]
+chr20 <- readDNAStringSet("HG38/chr20.fa.gz",format="fasta")[1]
+chr21 <- readDNAStringSet("HG38/chr21.fa.gz",format="fasta")[1]
+chr22 <- readDNAStringSet("HG38/chr22.fa.gz",format="fasta")[1]
+chrX <- readDNAStringSet("HG38/chrX.fa.gz",format="fasta")[1]
+chrY <- readDNAStringSet("HG38/chrY.fa.gz",format="fasta")[1]
+chrM <- readDNAStringSet("HG38/chrM.fa.gz",format="fasta")[1]
 
 MotifSize <- 45
 
@@ -107,4 +114,4 @@ for (i in row(outFile)){
 secondOut <- data.frame(sequences)
 #substr(chr[1], 20000, 20120)
 
-write.table(secondOut, "C:/Users/Caleb/Desktop/Work/ATAC-seq/upstreamPeaks_Sequences.tsv", row.names = F)
+write.table(secondOut, paste(outdir, "upstreamPeak_Sequences.tsv", sep = ""), row.names = F)
