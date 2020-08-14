@@ -1,3 +1,5 @@
+Rscript BioString.R
+
 mkdir HG38
 cd HG38
 curl -LJO "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr1.fa.gz"
