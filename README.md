@@ -21,7 +21,8 @@
   
 *How to Use*
 
-  - Run the macro.sh script with 3 arguments. The first being an input bam file, the second being an output directory.
+  - In your main directory, run the *initialization.sh* script. This will download hg38 chromosomal data which we need for future steps.
+  - For each sample, run the macro.sh script with 3 arguments. The first being an input bam file, the second being an output directory.
   - For example:
     sh macro.sh /data/fakeFileLocation/3c39.bam /MACS2_out
   
