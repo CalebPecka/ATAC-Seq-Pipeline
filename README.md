@@ -4,6 +4,7 @@
 **Requirements**
 
   - Python >= 3.6
+  - R >= 4.0
   - numpy >= 1.8.0 
   - scipy >= 0.17.0
   - py2bit >= 0.1.0
