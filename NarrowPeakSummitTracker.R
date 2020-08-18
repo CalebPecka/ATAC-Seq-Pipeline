@@ -75,7 +75,7 @@ chrM <- genome[25]
 
 MotifSize <- 45
 
-sequences <- c()
+motifFile <- c()
 
 for (i in row(outFile)){
   
@@ -109,10 +109,11 @@ for (i in row(outFile)){
                  "chrM" = BStringSet(chrM, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
                  )
 
-  sequences <- append(sequences, paste(c(subject[1], subject[3], as.character(seq)), collapse = " "))
+  motifFile <- append(motifFile, paste(c(">", subject[1], ":", as.character(as.numeric(subject[4]) - MotifSize), "-", as.character(as.numeric(subject[4]) + MotifSize), ":", subject[3]), collapse = ''))
+  motifFile <- append(motifFile, as.character(seq))
 }
 
-secondOut <- data.frame(sequences)
+secondOut <- data.frame(motifFile)
 #substr(chr[1], 20000, 20120)
 
 write.table(secondOut, paste(outdir, "upstreamPeak_Sequences.tsv", sep = ""), row.names = F)
