@@ -37,7 +37,6 @@ for (i in chrGroups){
   
 }
 
-#write.table(data.frame(outFile), "C:/Users/Caleb/Desktop/Work/ATAC-seq/summitGeneIntersect.tsv")
 outFile <- data.frame(outFile)
 write.table(outFile, paste(outdir, "upstremPeaks.tsv", sep = ""), row.names = F)
 
@@ -46,31 +45,33 @@ write.table(outFile, paste(outdir, "upstremPeaks.tsv", sep = ""), row.names = F)
 ##########################
 library(Biostrings)
 
-chr1 <- readDNAStringSet("HG38/chr1.fa.gz",format="fasta")[1]
-chr2 <- readDNAStringSet("HG38/chr2.fa.gz",format="fasta")[1]
-chr3 <- readDNAStringSet("HG38/chr3.fa.gz",format="fasta")[1]
-chr4 <- readDNAStringSet("HG38/chr4.fa.gz",format="fasta")[1]
-chr5 <- readDNAStringSet("HG38/chr5.fa.gz",format="fasta")[1]
-chr6 <- readDNAStringSet("HG38/chr6.fa.gz",format="fasta")[1]
-chr7 <- readDNAStringSet("HG38/chr7.fa.gz",format="fasta")[1]
-chr8 <- readDNAStringSet("HG38/chr8.fa.gz",format="fasta")[1]
-chr9 <- readDNAStringSet("HG38/chr9.fa.gz",format="fasta")[1]
-chr10 <- readDNAStringSet("HG38/chr10.fa.gz",format="fasta")[1]
-chr11 <- readDNAStringSet("HG38/chr11.fa.gz",format="fasta")[1]
-chr12 <- readDNAStringSet("HG38/chr12.fa.gz",format="fasta")[1]
-chr13 <- readDNAStringSet("HG38/chr13.fa.gz",format="fasta")[1]
-chr14 <- readDNAStringSet("HG38/chr14.fa.gz",format="fasta")[1]
-chr15 <- readDNAStringSet("HG38/chr15.fa.gz",format="fasta")[1]
-chr16 <- readDNAStringSet("HG38/chr16.fa.gz",format="fasta")[1]
-chr17 <- readDNAStringSet("HG38/chr17.fa.gz",format="fasta")[1]
-chr18 <- readDNAStringSet("HG38/chr18.fa.gz",format="fasta")[1]
-chr19 <- readDNAStringSet("HG38/chr19.fa.gz",format="fasta")[1]
-chr20 <- readDNAStringSet("HG38/chr20.fa.gz",format="fasta")[1]
-chr21 <- readDNAStringSet("HG38/chr21.fa.gz",format="fasta")[1]
-chr22 <- readDNAStringSet("HG38/chr22.fa.gz",format="fasta")[1]
-chrX <- readDNAStringSet("HG38/chrX.fa.gz",format="fasta")[1]
-chrY <- readDNAStringSet("HG38/chrY.fa.gz",format="fasta")[1]
-chrM <- readDNAStringSet("HG38/chrM.fa.gz",format="fasta")[1]
+genome <- readDNAStringSet("HG38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz", format = "fasta")
+
+chr1 <- genome[1]
+chr2 <- genome[2]
+chr3 <- genome[3]
+chr4 <- genome[4]
+chr5 <- genome[5]
+chr6 <- genome[6]
+chr7 <- genome[7]
+chr8 <- genome[8]
+chr9 <- genome[9]
+chr10 <- genome[10]
+chr11 <- genome[11]
+chr12 <- genome[12]
+chr13 <- genome[13]
+chr14 <- genome[14]
+chr15 <- genome[15]
+chr16 <- genome[16]
+chr17 <- genome[17]
+chr18 <- genome[18]
+chr19 <- genome[19]
+chr20 <- genome[20]
+chr21 <- genome[21]
+chr22 <- genome[22]
+chrX <- genome[23]
+chrY <- genome[24]
+chrM <- genome[25]
 
 MotifSize <- 45
 
@@ -81,34 +82,34 @@ for (i in row(outFile)){
   subject <- unlist(strsplit(outFile[i,], ' '))
   
   seq <- switch (subject[1],
-                 "chr1" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr2" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr3" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr4" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr5" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr6" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr7" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr8" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr9" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr10" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr11" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr12" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr13" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr14" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr15" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr16" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr17" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr18" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr19" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr20" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr21" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chr22" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chrX" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chrY" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
-                 "chrM" = BStringSet(chr1, start = as.numeric(subject[3]) - MotifSize, end = as.numeric(subject[3]) + MotifSize),
+                 "chr1" = BStringSet(chr1, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr2" = BStringSet(chr2, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr3" = BStringSet(chr3, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr4" = BStringSet(chr4, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr5" = BStringSet(chr5, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr6" = BStringSet(chr6, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr7" = BStringSet(chr7, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr8" = BStringSet(chr8, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr9" = BStringSet(chr9, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr10" = BStringSet(chr10, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr11" = BStringSet(chr11, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr12" = BStringSet(chr12, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr13" = BStringSet(chr13, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr14" = BStringSet(chr14, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr15" = BStringSet(chr15, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr16" = BStringSet(chr16, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr17" = BStringSet(chr17, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr18" = BStringSet(chr18, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr19" = BStringSet(chr19, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr20" = BStringSet(chr20, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr21" = BStringSet(chr21, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chr22" = BStringSet(chr22, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chrX" = BStringSet(chrX, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chrY" = BStringSet(chrY, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
+                 "chrM" = BStringSet(chrM, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
                  )
 
-  sequences <- append(sequences, paste(c(subject[1], subject[2], as.character(seq)), collapse = " "))
+  sequences <- append(sequences, paste(c(subject[1], subject[3], as.character(seq)), collapse = " "))
 }
 
 secondOut <- data.frame(sequences)
