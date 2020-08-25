@@ -16,7 +16,9 @@ chrGroups <- c("chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","c
 for (i in chrGroups){
   #EVERYTHING IS THE SAME CHROMOSOME REGION
   genesTemp <- genes[which(genes$V1 == i),]
-  summitsTemp <- summits[which(summits$V1 == i),]$V2
+  summitsTempIntermediate <- summits[which(summits$V1 == i),]#$V2 
+  summitsTemp <- summitsTempIntermediate$V2 + summitsTempIntermediate$V10 #FINDS BP POSITION OF SUMMIT ALONG CHROMOSOME
+  summitsQVals <- summitsTempIntermediate$V9 #FINDS Q VALUES FOR EACH SUMMIT
   
   for (j in row.names(genesTemp)){
     #FINDS THE START AND STOP BASE FOR EACH GENE
@@ -24,11 +26,13 @@ for (i in chrGroups){
     low <- rowOfInterest$V2 - 1000
     high <- rowOfInterest$V2
     
-    summitsList <- summitsTemp[which(summitsTemp >= low & summitsTemp <= high)]
+    conditional <- which(summitsTemp >= low & summitsTemp <= high)
+    summitsList <- summitsTemp[conditional]
+    summitsQValList <- summitsQVals[conditional]
     
     if (length(summitsList) != 0){
       for (k in summitsList){
-        outFile <- append(outFile, paste(c(i, rowOfInterest$V4, k), collapse = " "))
+        outFile <- append(outFile, paste(c(i, rowOfInterest$V4, summitsList[k], summitsQValList[k]), collapse = " "))
       }
     }
   }
@@ -76,6 +80,7 @@ chrM <- genome[25]
 MotifSize <- 45
 
 motifFile <- c()
+qVal <- c()
 
 for (i in row(outFile)){
   
@@ -109,11 +114,14 @@ for (i in row(outFile)){
                  "chrM" = BStringSet(chrM, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
                  )
 
-  motifFile <- append(motifFile, paste(c(">", subject[1], ":", as.character(as.numeric(subject[4]) - MotifSize), "-", as.character(as.numeric(subject[4]) + MotifSize), ":", subject[3]), collapse = ''))
+  motifFile <- append(motifFile, paste(c(">", subject[1], ":", as.character(as.numeric(subject[4]) - MotifSize), "-", as.character(as.numeric(subject[4]) + MotifSize), ":", subject[3], "\t"), collapse = ''))
   motifFile <- append(motifFile, as.character(seq))
+  
+  qVal <- append(qVal, c(subject[5], subject[5]))
 }
 
 secondOut <- data.frame(motifFile)
 #substr(chr[1], 20000, 20120)
+secondOut <- data.frame(secondOut[order(as.numeric(qVal)),])
 
-write.table(secondOut, paste(outdir, "upstreamPeak_Sequences.tsv", sep = ""), row.names = F)
+write.table(secondOut, paste(outdir, "upstreamPeak_Sequences.tsv", sep = ""), row.names = F, col.names = F, quote = F)
