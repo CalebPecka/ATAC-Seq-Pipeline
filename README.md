@@ -55,19 +55,30 @@ The *tracks.ini* file has many visual customization options. Here is some exampl
 **macs2 callpeak -t $1 -g hs -f BAM -p 0.05 --seed 0 --bdg --outdir $2**
 
 MACS2 is our peakcalling method. Open chromatin regions can be identified by regions where reads have piled up more than the background coverage.
+
   --'t' is the parameter used for our input file.
+  
   --'g hs' identifies that we're using a human sequence.
+  
   --'f' identifies our input file type, in this case bam.
+  
   --'p' is our pvalue for identifying if the piled reads are significantly more accessible than the background coverage. These results are tabulated in a narrowPeaks file for future usage.
+  
   --'seed' is a randomly generated started value which can be used to create reproducible results.
+  
   --'bdg' indicates that we'd like to also create a bedgraph file, which we later convert to a bigwig file, a common file type for visualizing open chromatin regions.
+  
   --'outdir' is our ouput directory.
+
 
 **bamCoverage -b $1 -o $2/bigWig_coverage.bw**
 
 BamCoverage is a method of converting a bedgraph file to a bigwig file. It is a component of the pygenometracks installation. If you don't wish to visualize your pygenometracks, this step can be ignored.
+
   --'b' is the parameter used for our input file.
+  
   --'o' is our output directory.
+  
   
 **make_tracks_file --trackFiles $2/bigWig_coverage.bw $2/NA_peaks.narrowPeak genes.bed -o $2/tracks.ini**
 
