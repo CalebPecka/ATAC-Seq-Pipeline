@@ -20,3 +20,4 @@ r -e 'install.packages("https://cran.r-project.org/src/contrib/seqinr_3.6-1.tar.
 mkdir HG38
 cd HG38
 curl -LJO "ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz"
+#If you're using a different reference genome than the link provided above, make sure to replace the GFFgenes.bed file in the initial repository. The GFFgenes.bed file is a list of the start/stop positions for every gene in the provided genome sequence. If they are not provided from the same source, your gene sequences will have an incorrect output!
