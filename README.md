@@ -83,10 +83,10 @@ BamCoverage is a method of converting a bedgraph file to a bigwig file. It is a 
   --'o' is our output directory.
   
   
-**make_tracks_file --trackFiles $2/bigWig_coverage.bw $2/NA_peaks.narrowPeak genes.bed -o $2/tracks.ini**
+**make_tracks_file --trackFiles $2/bigWig_coverage.bw $2/NA_peaks.narrowPeak GFFgenes.bed -o $2/tracks.ini**
 
 This layers a series of tracks together for the pygenometracks visualization. The resulting .ini file is easily editable, see here: https://pygenometracks.readthedocs.io/en/latest/content/examples.html. Only one parameter is used, 'trackFiles'. Each file you include layer on top of each other. In this case, our visualization includes the bigWig coverage (peak visualization), narrowPeaks (bp location of peak visualized as a box plot), and a bed file for the start/stop regions of human genes.
 
-**Rscript NarrowPeakSummitTracker.R $2/NA_peaks.narrowPeak genes.bed $2**
+**Rscript NarrowPeakSummitTracker.R $2/NA_peaks.narrowPeak GFFgenes.bed $2**
 
 This R script will take the location of each peak summit (highest point of read coverage overlap) which was found 1000 bps upstream of human genes. We can often identify these peaks as promoter regions for their respective downstream genes. The resulting 90 bp sequence around each summit location is tabulated in a fasta file. Each fasta header including the start/stop position of the sequence, as well as the gene they theoretically promote.
