@@ -7,7 +7,7 @@ outdir <- args[3]
 
 summits <- read.delim(inputSummits, header = F)
 
-genes <- read.delim(inputGenes, header = F)
+genes <- read.delim(inputGenes, header = F, sep = " ")
 
 outFile <- c()
 
