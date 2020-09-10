@@ -40,7 +40,10 @@ If you wish to visualize genomic tracks in future steps, use the following comma
   
 For each sample, run the *macro.sh* script with 3 arguments. The first being your input .bam file, the second being an output directory.
 For example:
-  -*sh macro.sh /data/fooFileLocation/3c39.bam /MACS2_out*
+
+  -*sh macro.sh /data/fooFileLocation/3c39.bam /MACS2_out/*
+  
+  Make sure to include a "/" at the end of your directory reference, seen in the example above.
   
 This command generally takes an hour or two to complete.
 
