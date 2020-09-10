@@ -42,7 +42,7 @@ for (i in chrGroups){
 }
 
 outFile <- data.frame(outFile)
-write.table(outFile, paste(outdir, "upstremPeaks.tsv", sep = ""), row.names = F)
+write.table(outFile, paste(outdir, "upstreamPeaks.tsv", sep = ""), row.names = F)
 
 ##########################
 ##SEQUENCE DETERMINATION
