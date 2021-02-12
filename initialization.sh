@@ -34,7 +34,20 @@ R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/seqinr/se
 #r -e 'install.packages("https://cran.r-project.org/src/contrib/sp_1.4-2.tar.gz", repos = NULL, type = "source")'
 #r -e 'install.packages("https://cran.r-project.org/src/contrib/ade4_1.7-15.tar.gz", repos = NULL, type = "source")'
 #r -e 'install.packages("https://cran.r-project.org/src/contrib/segmented_1.2-0.tar.gz", repos = NULL, type = "source")'
-#r -e 'install.packages("https://cran.r-project.org/src/contrib/seqinr_3.6-1.tar.gz", repos = NULL, type = "source")'
+# CRAN DEPENDENCY R6
+# CRAN DEPENDENCY PRETTYUNITS
+# RLANG
+# ELLIPSIS
+# GLUE
+# LIFECYCLE
+# PKGCONFIG
+# RLANG
+# DIGEST
+# VCTRS
+# CRAN DEPENDENCY HMS
+# CRAN DEPENDENCY PROGRESS
+#REINSTALL ADE4
+r -e 'install.packages("https://cran.r-project.org/src/contrib/seqinr_3.6-1.tar.gz", repos = NULL, type = "source")'
 
 #We also want to create a separate directory for the gene bank we download from. The link below can be modified for any reference genome you'd rather use for your project.
 mkdir HG38
