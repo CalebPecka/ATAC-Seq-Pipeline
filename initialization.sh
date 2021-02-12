@@ -27,7 +27,7 @@ R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/seqinr/se
 #r -e 'install.packages("https://bioconductor.org/packages/release/bioc/src/contrib/IRanges_2.22.2.tar.gz", repos = NULL, type = "source")'
 #r -e 'install.packages("https://www.bioconductor.org/packages/release/bioc/src/contrib/zlibbioc_1.34.0.tar.gz", repos = NULL, type = "source")'
 #r -e 'install.packages("https://bioconductor.org/packages/release/bioc/src/contrib/XVector_0.28.0.tar.gz", repos = NULL, type = "source")'
-#r -e 'install.packages("https://cran.r-project.org/src/contrib/crayon_1.3.4.tar.gzy", repos = NULL, type = "source")'
+#r -e 'install.packages("https://cran.r-project.org/src/contrib/crayon_1.3.4.tar.gz", repos = NULL, type = "source")'
 #r -e 'install.packages("https://bioconductor.org/packages/release/bioc/src/contrib/Biostrings_2.56.0.tar.gz", repos = NULL, type = "source")'
 #r -e 'install.packages("https://bioconductor.org/packages/release/bioc/src/contrib/BCRANK_1.50.0.tar.gz", repos = NULL, type = "source")'
 #r -e 'install.packages("https://cran.r-project.org/src/contrib/pixmap_0.4-11.tar.gz", repos = NULL, type = "source")'
