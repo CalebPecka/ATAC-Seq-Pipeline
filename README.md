@@ -57,6 +57,7 @@ Each of the programs, inputs, and outputs for this program can be visualized in 
 
 ## MACS2
 Command: **macs2 callpeak -t $1 -g hs -f BAM -p 0.05 --seed 0 --bdg --outdir .**
+
 *For the command above, $1 refers to the .bam file you're processing.*
 
 MACS2 is our peakcalling method. Open chromatin regions can be identified by regions where reads have piled up more than the background coverage.
@@ -70,7 +71,8 @@ MACS2 is our peakcalling method. Open chromatin regions can be identified by reg
   --'outdir' is our ouput directory. By including a dot, '.', we are telling the computer to send all output files to the current directory.
 
 ## BdgToBigWig
-**bamCoverage -b $1 -o bigWig_coverage.bw**
+Command: **bamCoverage -b $1 -o bigWig_coverage.bw**
+
 *For the command above, $1 refers to the .bam file you're processing.*
 
 BamCoverage is a method of converting a bedgraph file to a bigwig file. Our visualization tool, PyGenomeTracks, requires an input file BigWig type. If you don't wish to visualize your results, this step can be ignored. 
@@ -79,12 +81,12 @@ BamCoverage is a method of converting a bedgraph file to a bigwig file. Our visu
   --'o' is your output directory. In the example command above, we are naming our file to "bigWig_coverage.bw" using the "-o" output parameter.
   
 ## Make Tracks
-**make_tracks_file --trackFiles bigWig_coverage.bw NA_peaks.narrowPeak GFFgenes.bed -o tracks.ini**
+Command: **make_tracks_file --trackFiles bigWig_coverage.bw NA_peaks.narrowPeak GFFgenes.bed -o tracks.ini**
 
 "Make Tracks" layers a series of rows together for the PyGenomeTracks visualization. Using chromosomal positioning, the "tracks.ini" output stores the position of relevant information relative to the genome. The resulting "tracks.ini" file is easily editable, see documentation here: https://pygenometracks.readthedocs.io/en/latest/content/examples.html. Only one parameter is used, 'trackFiles'. Each file you include AFTER the parameter is layered on top of the data from the previous file. In this case, our visualization includes the bigWig coverage (peak visualization), narrowPeaks (bp location of peak visualized as a box plot), and a bed file for the start/stop regions of human genes. The command can be modified to include other results throughout the pipeline, and only requires 1 or more file to be included as a parameter.
 
 ## PyGenomeTracks
-**pyGenomeTracks --tracks tracks.ini --region chr1:1000000-4000000 -o image.png**
+Command: **pyGenomeTracks --tracks tracks.ini --region chr1:1000000-4000000 -o image.png**
 
 PyGenomeTracks is the visualization command for the pipeline. It will plot a layered track of the data from the input "track.ini".
 
@@ -93,19 +95,30 @@ PyGenomeTracks is the visualization command for the pipeline. It will plot a lay
   --'o' is your output directory/file name.
 
 ## NarrowPeakSummitTracker.R
-**Rscript NarrowPeakSummitTracker.R**
+Command: **Rscript NarrowPeakSummitTracker.R**
 
 The goal of this function is to locate every instance of an accessible chromatin region that is within a 1000 base upstream region of genes in the human genome (likely locations to include a transcription factor binding site). The *GFFgenes.bed* file is used to find start locations of genes, and find summits from the MACS2 output *(NA_peaks.narrowPeak)* that are within the desired range of the gene. The output file *upstreamPeaks.tsv* stores information about the accessible chromatin regions location, including chromosome number, and start/stop base-pair (bp) numbers. *upstreamPeaks.tsv* also stored valuable information such as the name of genes that were discovered downstream, and the q-score of the peak region where it was identified. The q-score helps us estimate how confident the program was that it identified a chromatin accessible peak region.
 
 ## SummitFASTA.R
-**Rscript SummitFASTA.R**
+Command: **Rscript SummitFASTA.R**
 
 Once we've collected the LOCATION of potential transcription factor binding sites (TFBS) from *NarrowPeakSummitTracker.R*, we need to determine the sequence of the TFBS. Problematically, the real TFBS can be located anywhere within the accessible chromatin region, which can sometimes be thousands of bases long. At the peak location of each accessible chromatin region (defined by the highest density of sequence fragment overlap), the surrounding nucleotide sequence is stored in a new FASTA file called *upstreamPeak_sequences.tsv*. The size of the nucleotide search space can be modified by the user. By default, the script searches for a 100 bp region surrounding each summit.
 A value of 100 is consistent with the default requirements of other motif-searching tools like the tools used by MEME Suite. This value can be modified by changing the MotifSize variable within the *SummitFASTA.R* script.
 
 ## BCrank.R
-**Rscript BCrank.R**
+Command: **Rscript BCrank.R**
 
 BCRANK is tool that, when provided a list of FASTA sequences, determines frequently repeated motif sequences. In our case, repeat motif sequences are likely to be important structural components to a TFBS. BCRank requires the input to be ordered according to confidence level. Our script automatically sorts the data according to q-score, the confidence level provided by MACS2. By default, the BCrank program is repeated 12 times with different randomly generated seeds, each producing 100 motifs. The motifs are stored in a new directory *BCrankOutput/*.
 
-## TomTom
+## TomTom (Part 1)
+Command: **meme upstreamPeak_Sequences.fasta -dna -oc . -nostatus -time 18000 -mod zoops -nmotifs 100 -minw 6 -maxw 25 -objfun classic -revcomp -markov_order 0**
+
+MEME is another powerful tool for identifying motif sequences. The tool is hosted under the website: https://meme-suite.org/meme/tools/meme. MEME can also be ran using a command line, see software versions here: https://meme-suite.org/meme/doc/download.html. After running the command above, you will receive a series MEME.txt file which can be converted using the MEMEtxtToPWMconverter.R file. Simply run the Rscript after modifying the input variable within the script. This will return a series of position weighted matrices of predicted motifs, similar to BCrank. In BCrank, we extracted the consensus sequences from the position weighted matrices. 
+
+## TomTom (Part 2)
+Command: **tomtom -o dir BCRANK_motifs.meme jasperMemeFormatted.meme**
+
+TomTom is tool that compares a list of motifs against a database of known motifs. The tool is hosted under the website: https://meme-suite.org/meme/doc/tomtom.html?man_type=web, and can be installed from the same software versions in "TomTom (Part 1)". For your convenience, a database of known motifs, *jasperMemeFormatted.meme* has been included in this project directory. 
+
+## BCrankProcessing.R
+Command: **Rscript BCrankProcessing.R**
