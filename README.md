@@ -53,9 +53,9 @@ The *tracks.ini* file has many visual customization options. Here is some exampl
 
 Each of the programs, inputs, and outputs for this program can be visualized in the diagram at the top of this documentation. Input/output files are colored yellow, and scripts are colored blue. Some files are required inputs for multiple steps. If you choose to perform the pipeline manually, there is no set order when executing each script. Instead, it is easier to follow the arrows on the diagram, and ensure each required input exists in your directory before executing the next script. Below you will find two sections for **Scripts** and **Input/Output Files**, each containing descriptions and requirements for each object in the diagram. To run the pipeline, follow each blue script box, and execute their commands included below.
 
-## Scripts
+# Scripts
 
-# MACS2
+## MACS2
 Command: **macs2 callpeak -t $1 -g hs -f BAM -p 0.05 --seed 0 --bdg --outdir .**
 *For the command above, $1 refers to the .bam file you're processing.*
 
@@ -69,22 +69,30 @@ MACS2 is our peakcalling method. Open chromatin regions can be identified by reg
   --'bdg' indicates that we'd like to also create a bedgraph file, which we later convert to a bigwig file, a common file type for visualizing open chromatin regions.
   --'outdir' is our ouput directory. By including a dot, '.', we are telling the computer to send all output files to the current directory.
 
-# BdgToBigWig
+## BdgToBigWig
 **bamCoverage -b $1 -o bigWig_coverage.bw**
 *For the command above, $1 refers to the .bam file you're processing.*
 
 BamCoverage is a method of converting a bedgraph file to a bigwig file. Our visualization tool, PyGenomeTracks, requires an input file BigWig type. If you don't wish to visualize your results, this step can be ignored. 
 
   --'b' is the parameter used for our input file.
-  --'o' is our output directory. In the example command above, we are naming our file to "bigWig_coverage.bw" using the "-o" output parameter.
+  --'o' is your output directory. In the example command above, we are naming our file to "bigWig_coverage.bw" using the "-o" output parameter.
   
-# Make Tracks
+## Make Tracks
 **make_tracks_file --trackFiles bigWig_coverage.bw NA_peaks.narrowPeak GFFgenes.bed -o tracks.ini**
 
 "Make Tracks" layers a series of rows together for the PyGenomeTracks visualization. Using chromosomal positioning, the "tracks.ini" output stores the position of relevant information relative to the genome. The resulting "tracks.ini" file is easily editable, see documentation here: https://pygenometracks.readthedocs.io/en/latest/content/examples.html. Only one parameter is used, 'trackFiles'. Each file you include AFTER the parameter is layered on top of the data from the previous file. In this case, our visualization includes the bigWig coverage (peak visualization), narrowPeaks (bp location of peak visualized as a box plot), and a bed file for the start/stop regions of human genes. The command can be modified to include other results throughout the pipeline, and only requires 1 or more file to be included as a parameter.
 
-# PyGenomeTracks
+## PyGenomeTracks
+**pyGenomeTracks --tracks tracks.ini --region chr1:1000000-4000000 -o image.png**
 
-**Rscript NarrowPeakSummitTracker.R NA_peaks.narrowPeak GFFgenes.bed .**
+PyGenomeTracks is the visualization command for the pipeline. It will plot a layered track of the data from the input "track.ini".
+
+  --'tracks' is the parameter to indicate your input file. Must be type .ini.
+  --'region' indicates the chromosomal location you want to visualize. It is formated where the abbreviated chromosome name is included first, followed by the base-pair region, separating start and stop position by a hyphen. The chromosomal range shown above starts at 1 million and ends at 4 million. 
+  --'o' is your output directory/file name.
+
+## NarrowPeakSummitTracker.R
+**Rscript NarrowPeakSummitTracker.R**
 
 This R script will take the location of each peak summit (highest point of read coverage overlap) which was found 1000 bps upstream of human genes. We can often identify these peaks as promoter regions for their respective downstream genes. The resulting 90 bp sequence around each summit location is tabulated in a fasta file. Each fasta header including the start/stop position of the sequence, as well as the gene they theoretically promote.
