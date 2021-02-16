@@ -95,4 +95,17 @@ PyGenomeTracks is the visualization command for the pipeline. It will plot a lay
 ## NarrowPeakSummitTracker.R
 **Rscript NarrowPeakSummitTracker.R**
 
-This R script will take the location of each peak summit (highest point of read coverage overlap) which was found 1000 bps upstream of human genes. We can often identify these peaks as promoter regions for their respective downstream genes. The resulting 90 bp sequence around each summit location is tabulated in a fasta file. Each fasta header including the start/stop position of the sequence, as well as the gene they theoretically promote.
+The goal of this function is to locate every instance of an accessible chromatin region that is within a 1000 base upstream region of genes in the human genome (likely locations to include a transcription factor binding site). The *GFFgenes.bed* file is used to find start locations of genes, and find summits from the MACS2 output *(NA_peaks.narrowPeak)* that are within the desired range of the gene. The output file *upstreamPeaks.tsv* stores information about the accessible chromatin regions location, including chromosome number, and start/stop base-pair (bp) numbers. *upstreamPeaks.tsv* also stored valuable information such as the name of genes that were discovered downstream, and the q-score of the peak region where it was identified. The q-score helps us estimate how confident the program was that it identified a chromatin accessible peak region.
+
+## SummitFASTA.R
+**Rscript SummitFASTA.R**
+
+Once we've collected the LOCATION of potential transcription factor binding sites (TFBS) from *NarrowPeakSummitTracker.R*, we need to determine the sequence of the TFBS. Problematically, the real TFBS can be located anywhere within the accessible chromatin region, which can sometimes be thousands of bases long. At the peak location of each accessible chromatin region (defined by the highest density of sequence fragment overlap), the surrounding nucleotide sequence is stored in a new FASTA file called *upstreamPeak_sequences.tsv*. The size of the nucleotide search space can be modified by the user. By default, the script searches for a 100 bp region surrounding each summit.
+A value of 100 is consistent with the default requirements of other motif-searching tools like the tools used by MEME Suite. This value can be modified by changing the MotifSize variable within the *SummitFASTA.R* script.
+
+## BCrank.R
+**Rscript BCrank.R**
+
+BCRANK is tool that, when provided a list of FASTA sequences, determines frequently repeated motif sequences. In our case, repeat motif sequences are likely to be important structural components to a TFBS. BCRank requires the input to be ordered according to confidence level. Our script automatically sorts the data according to q-score, the confidence level provided by MACS2. By default, the BCrank program is repeated 12 times with different randomly generated seeds, each producing 100 motifs. The motifs are stored in a new directory *BCrankOutput/*.
+
+## TomTom
