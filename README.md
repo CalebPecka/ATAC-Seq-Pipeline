@@ -3,9 +3,9 @@
 
 # Requirements
 
-  **- R version >= 4.0.0 is required for this project, however it is automatically installed in a new conda environment using the *initialization.sh* script. This is done to prevent conflicts with package dependencies. If you would prefer to set up your own environment, you will have to modify the *initialization.sh* and install packages for "Biostrings", "BCRANK", and "seqinr".**
+  **R version >= 4.0.0 is required for this project. The correct R version is automatically installed in a new conda environment (ATAC) using the *initialization.sh* script. The *initialization.sh* script includes automated installation that prevents conflicts with package dependencies in R. If you would prefer to set up your own environment, you will have to modify *initialization.sh* and install packages for "Biostrings", "BCRANK", and "seqinr".**
   
-  **In the same environment, install:**
+  **This GitHub Pipeline includes an optional branch for track-based visualization of chromatin accessibility. To use this commands, you will have to install the following dependencies in the "ATAC" environment created by *initialization.sh*:**
   - Python >= 3.6
   - numpy >= 1.8.0 
   - scipy >= 0.17.0
@@ -17,18 +17,16 @@
   - hicmatrix >= 0.14
   - gffutils >= 0.9
 
-**Conda Environment**
-
-PyGenomeTracks is a useful tool for visualizing open chromatin regions and gene regions concurrently. The following commands will add these features to your conda environment.
+After the depencies have been installed, the following commands will install the PyGenomeTracks visualization tool to your environment.
 
   - conda install -c bioconda -c conda-forge pygenometracks python=3.7
   - conda install -c bioconda deeptools
 
 # Workflow Overview
 
-![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/WorkflowDiagram.png)
+![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/ATACseq_Visualization.png)
 
-This repository assumes you have already processed your raw fastq files, and your data is formatted as a series of .bam files, one per sample. The entire process can be run with the *initialization.sh* and *macro.sh* scripts. If you encounter difficulties, documentation for each command can be seen in the section below.
+This repository assumes you have already processed your raw fastq files, and your data is formatted as a series of .bam files, one per sample. The entire pipeline can be run with the *macro.sh* script after performing initialization. If you encounter difficulties, documentation for each command can be seen in the sections below.
 
 **Using the Macro Scripts**
 
