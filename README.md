@@ -122,3 +122,15 @@ TomTom is tool that compares a list of motifs against a database of known motifs
 
 ## BCrankProcessing.R
 Command: **Rscript BCrankProcessing.R**
+
+The results from the BCrankOutput/ directory are useless by themselves. The BCrankProcessing.R script concatenates and subsets the files within the directory to obtain a list of all 1200 motifs that *BCrank.R* previously identified. If you modify the BCrankOutput/ directory in any way, it is possible you can interfere with the programming in BCrankProcessing.R. Once the motifs have been extracted, the script searches for instances of every motif within the *upstreamPeak_sequences.tsv* file. *upstreamPeak_sequences.tsv* is a necessary file to run BCrankProcessing.R, but the file has been removed from the GitHub repository diagram to decrease clutter. BCrankProcessing.R also verifies that each matching site is location within the region of a narrow peak. This calculation is performed by comparing the genomic location data with the previously created file, *NA_peaks.narrowPeak*. The output file *matchingSites.csv* stores any information necessary for remaining scripts.
+
+## FullGenomeMatch.R
+Command: **Rscript FullGenomeMatch.R**
+
+For complex reasons, some matching sites are duplicated in the *BCrankProcessing.R* script. To create a true representation of our data, duplicate ENST transcript sites are removed in FullGenomeMatch.R. Additionally, gene conversion IDs are tagged to each matching site during this step. Conversion IDs were created by the DAVID database, and are useful for comparing ENST data to other gene expression studies that use ENSG or Gene Symbol identifiers. The expanded table is written to the output file "nonRepeatMatchingSites.tsv".
+
+## Analysis.R
+Command: **Rscript Analysis.R**
+
+Finally, the results can be analyzed. Analysis should be performed uniquely according to the design of each experiment. In our case, researchers were interested in verifying the discovery of TFBS by comparing the results to known differential gene expression patterns. Example files have been included in this project to illustrate the creation of a chi-squared analysis, as well as a normal curve distribution for the occupancy of TFBS at each gene. 
