@@ -1,127 +1,148 @@
-###### INPUT ARGUEMENTS#########
-args <- commandArgs(trailingOnly = T)
+# Set your working directory to the current file directory 
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-inputSummits <- args[1]
-inputGenes <- args[2]
-outdir <- args[3]
+######################
+# Input Files
+######################
+genes <- read.delim("GFFgenes.bed", sep = " ")
+summits <- read.delim("NA_peaks.narrowPeak", header = F) # Output from MACS2
 
-summits <- read.delim(inputSummits, header = F)
+# List of chromosomes.
+chrGroups <- c("chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10",
+               "chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19",
+               "chr20","chr21","chr22","chrX","chrY","chrM")
 
-genes <- read.delim(inputGenes, header = F, sep = " ")
 
+
+##########################################################################
+# Error check
+# Determines if inputs and outputs are giving expected ranges of results
+
+# Checks the gene file is BED formatted.
+if (all(colnames(genes) != c("Chromosome", "Start", "Stop", "GeneName"))){
+  # Error output message.
+  stop(paste0("Input BED file for reference genes not properly formatted.",
+    "Make sure the file contains 4 columns labeled (Chromosome, Start, ",
+    "Stop, GeneName). Elements should be separated with a single space."))
+  
+  # Script failed to terminate.
+  print("Script did not end! Please manually terminate.")
+}
+
+# Checks the summits file is formatted correctly.
+if (length(summits) != 10){
+  stop("Input Narrow Peak Summits file not properly formatted. ",
+    "Make sure the file contains 10 columns, NO header, and is separated by tabs.")
+  print("Script did not end! Please manually terminate.")
+}
+
+# Runs a simulation of the code using a data subset (first 100 rows of GFFgenes.bed).
+# If any errors exist, they should be caught early.
+outFile <- c()
+genesTemp <- genes[which(genes$Chromosome == chrGroups[1]),]
+summitsTempIntermediate <- summits[which(summits$V1 == chrGroups[1]),]
+summitsTemp <- summitsTempIntermediate$V2 + summitsTempIntermediate$V10 
+summitsQVals <- summitsTempIntermediate$V9
+
+for (j in row.names(genesTemp)[1:100]){
+  rowOfInterest <- genesTemp[j,]
+  low <- rowOfInterest$Start - 1000
+  high <- rowOfInterest$Start - 100
+  
+  conditional <- which(summitsTemp >= low & summitsTemp <= high)
+  summitsList <- summitsTemp[conditional]
+  summitsQValList <- summitsQVals[conditional]
+  
+  if (length(summitsList) != 0){
+    for (k in 1:length(summitsList)){
+      outFile <- append(outFile, paste(c(i, rowOfInterest$ENST, summitsList[k], 
+                                         summitsQValList[k]), collapse = " "))
+    }
+  }
+}
+
+# Prints a sample of the output file to be confirmed by the user.
+print("#############################################")
+print("SAMPLE upstreamPeaks.tsv Outfile")
+print("Check that the output is formatted correctly.")
+print("#############################################")
+print(head(outFile))
+
+testOutFile <- unlist(strsplit(outFile[1], ' '))
+if (is.null(testOutFile[3])){
+  stop(paste0("Test output returned NULL for chromosome start position. ",
+    "Check input. Terminating command. It is possible this error occurred because no peaks ",
+    "were found upstream to first 100 genes in your reference gene list."))
+  print("Script did not end! Please manually terminate.")
+}
+if (is.null(testOutFile[4])){
+  stop(paste0("Test output returned NULL for chromosome end position. Check input. ",
+    "Terminating command. It is possible this error occurred because no peaks were found ",
+    "upstream to first 100 genes in your reference gene list."))
+  print("Script did not end! Please manually terminate.")
+}
+##########################################################################
+
+
+
+# Main function. The output file variable is reset.
 outFile <- c()
 
-chrGroups <- c("chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chr20","chr21","chr22","chrX","chrY","chrM")
-
-for (i in chrGroups){
-  #EVERYTHING IS THE SAME CHROMOSOME REGION
-  genesTemp <- genes[which(genes$V1 == i),]
-  summitsTempIntermediate <- summits[which(summits$V1 == i),]#$V2 
-  summitsTemp <- summitsTempIntermediate$V2 + summitsTempIntermediate$V10 #FINDS BP POSITION OF SUMMIT ALONG CHROMOSOME
-  summitsQVals <- summitsTempIntermediate$V9 #FINDS Q VALUES FOR EACH SUMMIT
+# The goal of this function is to locate every instance of an accessible chromatin region that is
+# within a 1000 base upstream region of genes in the human genome. To do this, we use the GFFgenes.bed
+# file to find start locations of genes, and find summits from the MACS2 output that are within
+# our desired range of the gene. Each chromosome is calculated individually to avoid errors in which
+# multiple genes on different chromosomes have the same base pair (bp) start position.
+for (chromosome in chrGroups){
   
-  for (j in row.names(genesTemp)){
-    #FINDS THE START AND STOP BASE FOR EACH GENE
-    rowOfInterest <- genesTemp[j,]
-    low <- rowOfInterest$V2 - 1000
-    high <- rowOfInterest$V2
+  # Subset genes on the matching chromsome.
+  genesTemp <- genes[which(genes$chromosome == chromsome),]
+  # Subset of peaks(summits) on the matching chromosome.
+  summitsTempIntermediate <- summits[which(summits$V1 == chromosome),]
+  # Column 10 (V10) of the NA_peaks file includes the bp distance from the start of the accessible
+  # chromatin (V2) to the peak. To calculate the summit's bp position, we can add the values from
+  # these columns together.
+  summitsTemp <- summitsTempIntermediate$V2 + summitsTempIntermediate$V10
+  # The values in column 9 (V9) include a significance score metric for the peak. It is saved in
+  # memory for future programs.
+  summitsQVals <- summitsTempIntermediate$V9
+  
+  # For each gene, we perform a caluclation to find summit locations.
+  for (geneID in row.names(genesTemp)){
     
+    rowOfInterest <- genesTemp[geneID,]
+    # Here we calculate the range of acceptable bp locations for a summit to be located near a 
+    # gene. Summits in this region of more likely to contain transcription factor binding sites (TFBS).
+    low <- rowOfInterest$Start - 1000 # Lower bound bp region.
+    high <- rowOfInterest$Start - 100 # Upper bound bp region. TFBSs are unlikely to be found
+    # within the 100bp upstream region of genes.
+    
+    # The conditional variable finds all summits within the accepted bp region.
     conditional <- which(summitsTemp >= low & summitsTemp <= high)
+    # Afterwards, our previous variables are subset to include only the values in conditional.
     summitsList <- summitsTemp[conditional]
     summitsQValList <- summitsQVals[conditional]
     
+    # Checks that the table is not empty.
     if (length(summitsList) != 0){
-      for (k in summitsList){
-        outFile <- append(outFile, paste(c(i, rowOfInterest$V4, summitsList[k], summitsQValList[k]), collapse = " "))
+      for (k in 1:length(summitsList)){
+        # An output file is created that stores important variables delimited by spaces.
+        outFile <- append(outFile, paste(c(chromosome, rowOfInterest$ENST, 
+                                           summitsList[k], summitsQValList[k]), collapse = " "))
       }
+    }
+    else {
+      print("Summits table returned empty. Check input file formatting.")
     }
   }
   
-  print(i)
-  
+  # The chromosome variable is printed upon completion so the user has an easier time
+  # gauging the progress of the program.
+  print(paste0(chromosome, " search completed."))
 }
 
+# The output of the program is saved.
 outFile <- data.frame(outFile)
-write.table(outFile, paste(outdir, "upstreamPeaks.tsv", sep = ""), row.names = F)
+outFile[1,] <- NULL # Remove an uneccessary line.
+write.table(outFile, "upstreamPeaks.tsv", row.names = F, quote = F)
 
-##########################
-##SEQUENCE DETERMINATION
-##########################
-library(Biostrings)
-
-genome <- readDNAStringSet("HG38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz", format = "fasta")
-
-chr1 <- genome[1]
-chr2 <- genome[2]
-chr3 <- genome[3]
-chr4 <- genome[4]
-chr5 <- genome[5]
-chr6 <- genome[6]
-chr7 <- genome[7]
-chr8 <- genome[8]
-chr9 <- genome[9]
-chr10 <- genome[10]
-chr11 <- genome[11]
-chr12 <- genome[12]
-chr13 <- genome[13]
-chr14 <- genome[14]
-chr15 <- genome[15]
-chr16 <- genome[16]
-chr17 <- genome[17]
-chr18 <- genome[18]
-chr19 <- genome[19]
-chr20 <- genome[20]
-chr21 <- genome[21]
-chr22 <- genome[22]
-chrX <- genome[23]
-chrY <- genome[24]
-chrM <- genome[25]
-
-MotifSize <- 45
-
-motifFile <- c()
-qVal <- c()
-
-for (i in row(outFile)){
-  
-  subject <- unlist(strsplit(outFile[i,], ' '))
-  
-  seq <- switch (subject[1],
-                 "chr1" = BStringSet(chr1, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr2" = BStringSet(chr2, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr3" = BStringSet(chr3, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr4" = BStringSet(chr4, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr5" = BStringSet(chr5, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr6" = BStringSet(chr6, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr7" = BStringSet(chr7, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr8" = BStringSet(chr8, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr9" = BStringSet(chr9, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr10" = BStringSet(chr10, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr11" = BStringSet(chr11, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr12" = BStringSet(chr12, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr13" = BStringSet(chr13, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr14" = BStringSet(chr14, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr15" = BStringSet(chr15, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr16" = BStringSet(chr16, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr17" = BStringSet(chr17, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr18" = BStringSet(chr18, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr19" = BStringSet(chr19, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr20" = BStringSet(chr20, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr21" = BStringSet(chr21, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chr22" = BStringSet(chr22, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chrX" = BStringSet(chrX, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chrY" = BStringSet(chrY, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 "chrM" = BStringSet(chrM, start = as.numeric(subject[4]) - MotifSize, end = as.numeric(subject[4]) + MotifSize),
-                 )
-
-  motifFile <- append(motifFile, paste(c(">", subject[1], ":", as.character(as.numeric(subject[4]) - MotifSize), "-", as.character(as.numeric(subject[4]) + MotifSize), ":", subject[3], "\t"), collapse = ''))
-  motifFile <- append(motifFile, as.character(seq))
-  
-  qVal <- append(qVal, c(subject[5], subject[5]))
-}
-
-secondOut <- data.frame(motifFile)
-#substr(chr[1], 20000, 20120)
-secondOut <- data.frame(secondOut[order(as.numeric(qVal)),])
-
-write.table(secondOut, paste(outdir, "upstreamPeak_Sequences.tsv", sep = ""), row.names = F, col.names = F, quote = F)
