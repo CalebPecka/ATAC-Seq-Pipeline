@@ -210,16 +210,36 @@ Real File Name: **BCrankOutput/**
 A directory containing motif sequences (repeat sequences of DNA that are speculated to be TFBS). The default pipeline runs BCrank with 12 different seeds, identifying 100 motifs in each seed. The outputs are processed and sent to the BcrankOutput. The number preceding each file name in the BCrankOutput directory is used to distinguish each seed trial. The directory includes two types of files, .txt and .meme. Each file type includes the same set of 100 motifs, but formatted for different programs. TomTom only accepts MEME formatted files for position weighted matrices, and many FASTA search tools only accept consensus sequences (.txt).
 
 ## Matching Site Table
-Real File Name: **matchingSiteTable.csv
+Real File Name: **matchingSiteTable.csv**
 
 A file containing instances of each motif in the *upstreamPeak_sequences.tsv* file. Column 1 describes the consensus sequence. Column 2 describes the chromosomal location of the sequence. Column 3 describes describes the ENST that is found 1000 bases downstream of the peak. Column 4 describes the start location of the sequence. Column 5 describes the end location of the sequence. Column 6 describes whether or not the sequence is contained within the peak region of the narrowPeak results from MACS2. This is an error check, and no matching sites are included if they do not have a peak region associated with their chromosomal location.
 
 **Example**
 
 *consensusSequence	chromosome	geneName	start	end	hasPeak*
+
 *TAAGGGGCT	chr6	ENST00000607519	2398355	2398363	TRUE*
+
 *TAAGGGGCT	chr6	ENST00000532564	2398355	2398363	TRUE*
+
 *TGTTTVYCAG	chr6	ENST00000545177	2853889	2853898	TRUE*
+
+## Non Repeat Matching Sites
+Real File Name: **nonRepeatMatchingSites.csv**
+
+The results from *matchingSiteTable.csv* are further processed and duplicate ENST sequences at the same start and stop chromosomal locations are removed. In addition, the Gene Symbol name for each ENST is added. Values in the "Symbol" column were genes identified in DDR gene expression data.
+
+**Example**
+
+*consensusSequence	chromosome	geneName	start	end	hasPeak	Symbol	From*
+
+*GAHGNA	chr6	ENST00000479389	3063798	3063803	TRUE	none	RIPK1*
+
+*ADVTCDDAGG	chr6	ENST00000259806	1389260	1389269	TRUE	FOXF2	FOXF2*
+
+*GCDDACNVGG	chr6	ENST00000479389	3063784	3063793	TRUE	none	RIPK1*
+
+
 
 
 
