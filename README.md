@@ -24,7 +24,7 @@ After the depencies have been installed, the following commands will install the
 
 # Workflow Overview
 
-![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/ATACseq_Visualization.png)
+![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/Graphics/Programatic_Visualization.png)
 
 This repository assumes you have already processed your raw fastq files, and your data is formatted as a series of .bam files, one per sample. The entire pipeline can be run with the *macro.sh* script after performing initialization. If you encounter difficulties, documentation for each command can be seen in the sections below.
 
