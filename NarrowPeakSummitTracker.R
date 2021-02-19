@@ -1,5 +1,6 @@
-# Set your working directory to the current file directory 
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# Set your working directory to the current file directory
+# This command can only be used while working in an RStudio environment.
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ######################
 # Input Files
@@ -96,7 +97,7 @@ outFile <- c()
 for (chromosome in chrGroups){
   
   # Subset genes on the matching chromsome.
-  genesTemp <- genes[which(genes$chromosome == chromsome),]
+  genesTemp <- genes[which(genes$Chromosome == chromosome),]
   # Subset of peaks(summits) on the matching chromosome.
   summitsTempIntermediate <- summits[which(summits$V1 == chromosome),]
   # Column 10 (V10) of the NA_peaks file includes the bp distance from the start of the accessible
@@ -127,12 +128,9 @@ for (chromosome in chrGroups){
     if (length(summitsList) != 0){
       for (k in 1:length(summitsList)){
         # An output file is created that stores important variables delimited by spaces.
-        outFile <- append(outFile, paste(c(chromosome, rowOfInterest$ENST, 
+        outFile <- append(outFile, paste(c(chromosome, rowOfInterest$GeneName, 
                                            summitsList[k], summitsQValList[k]), collapse = " "))
       }
-    }
-    else {
-      print("Summits table returned empty. Check input file formatting.")
     }
   }
   
@@ -143,6 +141,5 @@ for (chromosome in chrGroups){
 
 # The output of the program is saved.
 outFile <- data.frame(outFile)
-outFile[1,] <- NULL # Remove an uneccessary line.
-write.table(outFile, "upstreamPeaks.tsv", row.names = F, quote = F)
+write.table(outFile, "upstreamPeaks.tsv", row.names = F, col.names = F, quote = F)
 

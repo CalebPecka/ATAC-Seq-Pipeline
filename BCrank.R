@@ -1,5 +1,6 @@
 # Set your working directory to the current file directory 
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# This command can only be used while working in an RStudio environment.
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ######################
 # Input Files
@@ -8,20 +9,21 @@ library(BCRANK)
 library(Biostrings)
 library(seqinr)
 
-# BCrank is used to discover 100 unique motifs in this program. To repeat this process, you can
-# increase the seedSize variable. The program is repeated using a new random seed a number of
-# times equal to the seed size. For example, a seedSize value of 12 will produce (12 * 100) = 
-# 1200 unique motifs.
+# BCrank is used to discover 100 unique motifs in this program (restartSie variable). To repeat this 
+# process, you can increase the seedSize variable. The program is repeated using a new random seed a 
+# number of times equal to the seed size. For example, a seedSize value of 12 will produce 
+# (12 * 100) = 1200 unique motifs.
 seedSize <- 12
+restartSize <- 100
 
 
 
 ######################
 # Program Start
 ######################
-for (seed in 1:12){
+for (seed in 1:seedSize){
   set.seed(as.numeric(seed)) # Set the randomized seed variable.
-  BCRANKout <- bcrank("upstreamPeak_Sequences.fasta", restarts = 100, use.P1 = TRUE, use.P2 = TRUE)
+  BCRANKout <- bcrank("upstreamPeak_Sequences.fasta", restarts = restartSize, use.P1 = TRUE, use.P2 = TRUE)
   
   BCRANKS <- unlist(toptable(BCRANKout))
   

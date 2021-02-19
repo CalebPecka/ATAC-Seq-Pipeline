@@ -1,5 +1,5 @@
 # Set your working directory to the current file directory 
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ######################
 # Input Files
@@ -33,13 +33,15 @@ BC_12 <- read.table("BCrankOutput/12_BC_consensusSequences.txt")
 # "dfnames" keeps track of the BCrank motif objects in short term memory.
 dfnames <- c("BC_1", "BC_2", "BC_3", "BC_4", "BC_5", "BC_6", 
              "BC_7", "BC_8", "BC_9", "BC_10", "BC_11", "BC_12")
+
 dfENV <- mget(dfnames, .GlobalEnv)
 
 # Creates a function that extracts consensus sequences from the BCrank files. Every other line is
 # a sequence score and is removed. 
 dataExtraction <- function(df) {
   w <- df[c(FALSE, TRUE),]
-  w <- w[c(1:25),]
+  rowSize <- round(nrow(w) / 2) + 1
+  w <- w[c(1:(rowSize)),]
   w <- unlist(w)
 }
 
@@ -117,14 +119,14 @@ while(count < length(bindingSiteSearchList) + 1){
     
     # If an error occurs during the previous process, a message tells the user which consensus
     # sequence failed, and the reason why.
-    error=function(cond) {
+    error = function(cond) {
       print("")
       print(paste("WARNING: The consensus sequence", bindingSiteSearch, "produced the following error:"))
       print(cond)
       print(paste(bindingSiteSearch, "has been removed from the binding site search list."))
       
       # doNotUse keeps track of which consensus sequences failed.
-      doNotUse <- append(doNotUse, count)
+      doNotUse <<- append(doNotUse, count)
     },
     
     # Whether the program failed or not, the count meter increases by 1, meaning we move on to the
@@ -189,5 +191,5 @@ for (chr in uniqueChr){
 out$hasPeak <- hasPeak
 out <- out[which(out$hasPeak == T),] # Subsets the data to only include hasPeak values of true.
 
-write.csv(out, "matchingSiteTable.csv")
+write.csv(out, "matchingSiteTable.csv", quote = F, row.names = F)
 

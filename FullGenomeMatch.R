@@ -1,16 +1,15 @@
 # Set your working directory to the current file directory 
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ######################
 # Input Files
 ######################
 out <- read.csv("matchingSiteTable.csv")
-genes <- read.delim("GFFgenes.bed", sep = " ", header = F)
+genes <- read.delim("GFFgenes.bed", sep = " ")
 geneExpression <- read.csv("C:/Users/Caleb/Desktop/Work/DDR/TCGA/overlap_test_fdr_05_RNASeq.csv")
 geneExpression$X <- NULL
 ensg2sym <- read.csv("C:/Users/Caleb/Desktop/Work/DDR/TCGA/ensg2symbol.csv", header = F)
 ensg2enst <- read.delim("C:/Users/Caleb/Desktop/Work/DDR/TCGA/ENSG2ENST.txt", sep = "\t")
-out$X <- NULL
 
 #ADD ROW TO GENE EXPRESSION WITH ENSG SYMBOL
 ensg2sym <- ensg2sym[-which(duplicated(ensg2sym$V2)),]
@@ -26,13 +25,13 @@ row.names(ensg2enst) <- ensg2enst$From
 geneExpression$ENST <- ensg2enst[geneExpression$extendedName,]$To
 
 #REMOVE PERIODS IN TRANSCRIPT NAMES FOR GENE TRANSCRIPT ID LOCATIONS
-genes$V4 <- gsub("\\..*","", genes$V4)
-row.names(genes) <- genes$V4
+genes$GeneName <- gsub("\\..*","", genes$GeneName)
+row.names(genes) <- genes$GeneName
 
 #ADD RELEVANT LOCATION OF GENE TRANSCRIPT LOCATION
-geneExpression$chr <- genes[geneExpression$ENST,]$V1
-geneExpression$start <- genes[geneExpression$ENST,]$V2
-geneExpression$end <- genes[geneExpression$ENST,]$V3
+geneExpression$chr <- genes[geneExpression$ENST,]$Chromosome
+geneExpression$start <- genes[geneExpression$ENST,]$Start
+geneExpression$end <- genes[geneExpression$ENST,]$Stop
 
 #####################################################################################
 #NOW WE NEED TO ATTACH RELEVANT MATCHING SITE INFORMATION TO THE GENE EXPRESSION DATA
@@ -41,30 +40,30 @@ geneExpression$end <- genes[geneExpression$ENST,]$V3
 createdBool <- F
 count <- 0
 
-for (i in row.names(genes)){
-  chr <- genes[i,]$V1 #DETERMINE THE CURRENT CHROMOSOME
-  start <- genes[i,]$V2 #V2 IS THE START POSITION
-  outTemp <- out[which(out$chromosome == chr & out$end <= start & out$end >= start - 1000),]
-  size <- nrow(outTemp)
-  if (size >= 1){
-    outTemp$ENSG <- rep(genes[i,]$V4, size)
-    
-    if (createdBool == F){
-      totality <- outTemp
-      createdBool <- T
-    }
-    else{
-      totality <- rbind(totality, outTemp)
-    }
-    print(count)
-    count <- count + 1
-  }
-}
+#for (i in row.names(genes)){
+#  #chr <- genes[i,]$Chromosome #DETERMINE THE CURRENT CHROMOSOME
+#  start <- genes[i,]$Start #V2 IS THE START POSITION
+#  outTemp <- out[which(out$chromosome == chr & out$end <= start & out$end >= start - 1000),]
+#  size <- nrow(outTemp)
+#  if (size >= 1){
+#    outTemp$ENSG <- rep(genes[i,]$GeneName, size)
+#    
+#   if (createdBool == F){
+#      totality <- outTemp
+#      createdBool <- T
+#    }
+#    else{
+#      totality <- rbind(totality, outTemp)
+#    }
+#    print(count)
+#    count <- count + 1
+#  }
+#}
 
-write.csv(totality, "C:/Users/Caleb/Downloads/test.csv")
+#write.csv(totality, "C:/Users/Caleb/Downloads/test.csv")
 
 #READ IN THE FILES, COMBINE THEM INTO A SINGLE FILE
-matchingSiteLocations <- totality
+matchingSiteLocations <- out
 
 #REMOVE DUPLICATE TFBS. THIS IS DETERMINED BY REPEAT START AND END LOCATIONS ON EACH UNIQUE CHROMOSOME
 chrColnames <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22", "chrX", "chrY", "chrM")
@@ -95,7 +94,7 @@ for (i in ensg2enst$From){
 ensg2enst$GeneSymbol <- convert
 
 convert2 <- c()
-for (i in nonRepeatMatchingSites$ENST){
+for (i in nonRepeatMatchingSites$geneName){
   replace <- ensg2enst[which(ensg2enst$To == i),]$GeneSymbol
   if (length(replace) == 0){ #NO VALUE FOUND, ADD FILLER
     convert2 <- append(convert2, "none")
@@ -106,15 +105,17 @@ for (i in nonRepeatMatchingSites$ENST){
 }
 
 nonRepeatMatchingSites$Symbol <- convert2
-
-write.csv(nonRepeatMatchingSites, "C:/Users/Caleb/Desktop/Work/ATAC-seq/BCRANK_output_3c39/nonRepeatMatchingSites.csv")
-
-nonRepeatMatchingSites <- read.csv("C:/Users/Caleb/Desktop/Work/ATAC-seq/BCRANK_output_3c39/nonRepeatMatchingSites.csv", row.names = 1)
-convDF <- read.csv("C:/Users/Caleb/Desktop/Work/ATAC-seq/GeneSymbolToENST.csv")
+convDF <- read.csv("GeneSymbolToENST.csv")
 convDF$Gene.Name <- NULL
 library(tidyverse)
-nonRepeatMatchingSites <- nonRepeatMatchingSites %>% left_join(convDF, by = c("ENST" = "To"))
+nonRepeatMatchingSites <- nonRepeatMatchingSites %>% left_join(convDF, by = c("geneName" = "To"))
 nonRepeatMatchingSites <- nonRepeatMatchingSites[which(!is.na(nonRepeatMatchingSites$From)),]
+
+write.csv(nonRepeatMatchingSites, "nonRepeatMatchingSites.csv", row.names = F)
+
+
+
+nonRepeatMatchingSites <- read.csv("nonRepeatMatchingSites.csv")
 
 #Chi Square Calculations
 DE_TF <- length(which(unique(geneExpression$row.names.WNT_cpm.) %in% unique(nonRepeatMatchingSites$From)))

@@ -1,5 +1,6 @@
 # Set your working directory to the current file directory 
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# This command can only be used while working in an RStudio environment.
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 ######################
 # Input Files
@@ -7,10 +8,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(Biostrings)
 
 genome <- readDNAStringSet("HG38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz", format = "fasta")
-outFile <- read.delim("upstreamPeaks.tsv", sep = " ", col.names = c("Chromsome", 
-                                                                    "GeneName", 
-                                                                    "SummitLocation", 
-                                                                    "Qval"))
+outFile <- read.delim("upstreamPeaks.tsv", sep = "\t")
 
 # This variable establishes the size of the motif binding site region you'd like to use.
 # If you don't know what that means, read further.
@@ -120,9 +118,15 @@ for (site in row(outFile)){
 }
 
 secondOut <- data.frame(motifFile) # Convert data to dataframe file format.
-secondOut <- data.frame(secondOut[order(as.numeric(qVal)),]) # Order the FASTA sequences based on QVal.
+orderByQVAL <- secondOut[rev(order(as.numeric(qVal))),] # Order the FASTA sequences based on QVal.
 # This step is important for accurate results when we eventually use the program "BCrank".
+even <- seq(from=2, to=length(orderByQVAL), by=2)
+odd <- even - 1
+finalOutput <- orderByQVAL
+finalOutput[even] <- orderByQVAL[odd]
+finalOutput[odd] <- orderByQVAL[even]
+finalOutput <- data.frame(finalOutput)
 
 # Write the output FASTA file.
-write.table(secondOut, "upstreamPeak_Sequences.fasta", row.names = F, col.names = F, quote = F)
+write.table(finalOutput, "upstreamPeak_Sequences.fasta", row.names = F, col.names = F, quote = F)
 
