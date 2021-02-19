@@ -134,3 +134,22 @@ For complex reasons, some matching sites are duplicated in the *BCrankProcessing
 Command: **Rscript Analysis.R**
 
 Finally, the results can be analyzed. Analysis should be performed uniquely according to the design of each experiment. In our case, researchers were interested in verifying the discovery of TFBS by comparing the results to known differential gene expression patterns. Example files have been included in this project to illustrate the creation of a chi-squared analysis, as well as a normal curve distribution for the occupancy of TFBS at each gene. 
+
+# Input/Output Files
+
+An example of each input/output file has been included in the *Example Inputs and Outputs* directory. By removing the "[EXAMPLE]" text from each file name and moving the files into the main directory, you can follow along and run each script to see how they function.
+
+## Narrow Peaks
+Real File Name: **NA_peaks.narrowPeak**
+
+A file describing the genomic location of chromatin accessible regions. Chromatin accessible regions are discovered by using DNA fragment-based pile-ups, producing "peaks". You can read more about fragment pile-ups and peak-calling here: https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html. The MACS2 narrowPeak file type includes 10 columns. Each row designates a separate chromatin region. Column 1 describes the chromosomal location. Column 2 describes the start location of the peak. Column 3 describes the stop location of the peak. Column 10 is the summit location in terms of base pairs from the start location. In other words, the value of column 10 plus the value of column 2 is the summit location for the peak.
+
+**Example**
+*chr5	3074889	3074985	NA_peak_270497	16	.	1.83486	1.66330	0.04154	53*
+*chr6	3077609	3077821	NA_peak_270498	21	.	2.16920	2.19008	0.42015	136*
+*chr6	3079095	3079191	NA_peak_270499	21	.	2.19518	2.13860	0.37627	37*
+
+## GFF Genes
+Real File Name: **GFFgenes.bed**
+
+
