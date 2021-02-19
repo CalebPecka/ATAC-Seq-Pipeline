@@ -145,11 +145,85 @@ Real File Name: **NA_peaks.narrowPeak**
 A file describing the genomic location of chromatin accessible regions. Chromatin accessible regions are discovered by using DNA fragment-based pile-ups, producing "peaks". You can read more about fragment pile-ups and peak-calling here: https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html. The MACS2 narrowPeak file type includes 10 columns. Each row designates a separate chromatin region. Column 1 describes the chromosomal location. Column 2 describes the start location of the peak. Column 3 describes the stop location of the peak. Column 10 is the summit location in terms of base pairs from the start location. In other words, the value of column 10 plus the value of column 2 is the summit location for the peak.
 
 **Example**
+
 *chr5	3074889	3074985	NA_peak_270497	16	.	1.83486	1.66330	0.04154	53*
+
 *chr6	3077609	3077821	NA_peak_270498	21	.	2.16920	2.19008	0.42015	136*
+
 *chr6	3079095	3079191	NA_peak_270499	21	.	2.19518	2.13860	0.37627	37*
 
 ## GFF Genes
 Real File Name: **GFFgenes.bed**
+
+A file describing the genomic location of genes. Genes are identified according to each transcript signature (ENST), one ENST for each row. The file includes a header, and **this header must have the exact column names or the pipeline will fail.** Column 1 describes the chromosomal location. Column 2 describes the start location of the ENST. Column 3 describes the stop location of the ENST. Column 4 is the name of each ENST. Later steps of the program will remove any data contained AFTER the period in each value of the GeneName column, (i.e. *ENST00000450305.2* will be converted to *ENST00000450305*).
+
+**Example**
+
+*Chromosome Start Stop GeneName*
+
+*chr1 12010 13670 ENST00000450305.2*
+
+*chr1 14404 29570 ENST00000488147.1*
+
+*chr1 17369 17436 ENST00000619216.1*
+
+## Upstream Peaks
+Real File Name: **upstreamPeaks.tsv**
+
+A file containing the identity of peak summits located within a 1000 base upstream region of genes. Regions 1000 bases upstream of genes are likely to contain transcription factor binding sites (TFBS), locations that regulate the nearby gene. We expect that the accessible chromatin regions defined by each row of the upstreamPeaks.tsv file contain TFBS. Column 1 describes the chromosomal location. Column 2 describes the ENST that is being regulated (found 1000 bases downstream of peak). Column 3 describes the base pair position of the summit. Column 4 describes the Q score of the summit, a representation of the quality of peak. The Q score is a product of MACS2.
+
+**Example**
+
+*chr6 ENST00000296839.3 1311949 14.89702*
+
+*chr6 ENST00000259806.1 1389234 0.74656*
+
+*chr6 ENST00000532564.5 2398375 0*
+
+## Hg38 Chromosome Sequences
+Real File Name: **HG38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna**
+
+A file containing the human genome in FASTA format. This is downloaded in the *initialization.sh* script so we can collect FASTA sequences from regions that are chromatin accessible.
+
+## Upstream Peak Sequences
+Real File Name: **upstreamPeak_sequences.tsv**
+
+A FASTA file of the DNA region surrounding the peaks identified from *upstreamPeaks.tsv*. The header for each sequence is colon delimited, separating the genomic location from the name of each ENST.
+
+**Example**
+
+*>chr6:3063768-3063868:ENST00000479389.1	
+
+*ATCGCCCTGGGCGGGGCGGACTGGGGGTAGACGGATCTGCCTCTGCGCCTAGCCCTGCCCTCCGCCGCCGCGCGAACGCGCGCGCCTCCCCGGCTAGTCCC
+
+*>chr6:2854540-2854640:ENST00000420981.2	
+
+*AGTGCACCATGATATCACCACACCGAAGGCCAGGCTGGCAAACAGGGATGTACACGCAGGGGAGACGAGAACTTCTCCCGTGAGAAACAGCACAGTCCAGC
+
+*>chr6:2853802-2853902:ENST00000545177.4	
+
+*AGTGACATCTCATTGTGTCATATTCAGGGTCCATGCCATCAACATGACTCATCAGTGCTGACGCGGTGATGACCTGGGGGACGCAGTGTTTCTCAGGTTCC
+
+## BCrankOutput/
+Real File Name: **BCrankOutput/**
+
+A directory containing motif sequences (repeat sequences of DNA that are speculated to be TFBS). The default pipeline runs BCrank with 12 different seeds, identifying 100 motifs in each seed. The outputs are processed and sent to the BcrankOutput. The number preceding each file name in the BCrankOutput directory is used to distinguish each seed trial. The directory includes two types of files, .txt and .meme. Each file type includes the same set of 100 motifs, but formatted for different programs. TomTom only accepts MEME formatted files for position weighted matrices, and many FASTA search tools only accept consensus sequences (.txt).
+
+## Matching Site Table
+Real File Name: **matchingSiteTable.csv
+
+A file containing instances of each motif in the *upstreamPeak_sequences.tsv* file. Column 1 describes the consensus sequence. Column 2 describes the chromosomal location of the sequence. Column 3 describes describes the ENST that is found 1000 bases downstream of the peak. Column 4 describes the start location of the sequence. Column 5 describes the end location of the sequence. Column 6 describes whether or not the sequence is contained within the peak region of the narrowPeak results from MACS2. This is an error check, and no matching sites are included if they do not have a peak region associated with their chromosomal location.
+
+**Example**
+
+*consensusSequence	chromosome	geneName	start	end	hasPeak
+
+*TAAGGGGCT	chr6	ENST00000607519	2398355	2398363	TRUE
+
+*TAAGGGGCT	chr6	ENST00000532564	2398355	2398363	TRUE
+
+*TGTTTVYCAG	chr6	ENST00000545177	2853889	2853898	TRUE
+
+
 
 
