@@ -216,13 +216,10 @@ A file containing instances of each motif in the *upstreamPeak_sequences.tsv* fi
 
 **Example**
 
-*consensusSequence	chromosome	geneName	start	end	hasPeak
-
-*TAAGGGGCT	chr6	ENST00000607519	2398355	2398363	TRUE
-
-*TAAGGGGCT	chr6	ENST00000532564	2398355	2398363	TRUE
-
-*TGTTTVYCAG	chr6	ENST00000545177	2853889	2853898	TRUE
+*consensusSequence	chromosome	geneName	start	end	hasPeak*
+*TAAGGGGCT	chr6	ENST00000607519	2398355	2398363	TRUE*
+*TAAGGGGCT	chr6	ENST00000532564	2398355	2398363	TRUE*
+*TGTTTVYCAG	chr6	ENST00000545177	2853889	2853898	TRUE*
 
 
 
