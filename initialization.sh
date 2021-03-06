@@ -19,7 +19,7 @@ R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/sp/sp_1.4
 R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/ade4/ade4_1.7-15.tar.gz", repos = NULL, type = "source")'
 R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/segmented/segmented_1.2-0.tar.gz", repos = NULL, type = "source")'
 R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/seqinr/seqinr_3.6-1.tar.gz", repos = NULL, type = "source")'
-
+R -e 'install.packages("http://bioconductor.org/packages/release/data/annotation/src/contrib/EnsDb.Hsapiens.v86_2.99.0.tar.gz", repos = NULL, type = "source")'
 
 
 #r -e 'install.packages("https://bioconductor.org/packages/release/bioc/src/contrib/BiocGenerics_0.34.0.tar.gz", repos = NULL, type = "source")' 
