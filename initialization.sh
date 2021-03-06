@@ -19,6 +19,17 @@ R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/sp/sp_1.4
 R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/ade4/ade4_1.7-15.tar.gz", repos = NULL, type = "source")'
 R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/segmented/segmented_1.2-0.tar.gz", repos = NULL, type = "source")'
 R -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/seqinr/seqinr_3.6-1.tar.gz", repos = NULL, type = "source")'
+
+
+
+R -e 'install.packages("https://cran.r-project.org/src/contrib/bitops_1.0-6.tar.gz", repos = NULL, type = "source")'
+R -e 'install.packages("https://cran.r-project.org/src/contrib/RCurl_1.98-1.2.tar.gz", repos = NULL, type = "source")'
+R -e 'install.packages("https://bioconductor.org/packages/release/data/annotation/src/contrib/GenomeInfoDbData_1.2.4.tar.gz", repos = NULL, type = "source")'
+R -e 'install.packages("https://bioconductor.org/packages/release/bioc/src/contrib/GenomeInfoDb_1.26.2.tar.gz", repos = NULL, type = "source")'
+R -e 'install.packages("https://bioconductor.org/packages/release/bioc/src/contrib/GenomicRanges_1.42.0.tar.gz", repos = NULL, type = "source")'
+
+https://bioconductor.org/packages/release/bioc/src/contrib/ensembldb_2.14.0.tar.gz
+
 R -e 'install.packages("http://bioconductor.org/packages/release/data/annotation/src/contrib/EnsDb.Hsapiens.v86_2.99.0.tar.gz", repos = NULL, type = "source")'
 
 
