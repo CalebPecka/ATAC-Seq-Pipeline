@@ -1,0 +1,1 @@
+This directory contains all the output files created from the CADEG workflow. Outputs are separated according to samples, where each input BAM file creates a new directory for output files. 

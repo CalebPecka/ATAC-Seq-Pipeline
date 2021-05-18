@@ -1,0 +1,9 @@
+# Starting point. Every snakemake rule is ran from this file.
+
+include: "rules/MACS2.smk"
+include: "rules/BamCoverage.smk"
+include: "rules/NarrowPeakSummitTracker.smk"
+include: "rules/SummitFASTA.smk"
+include: "rules/BCrank.smk"
+include: "rules/BCrankProcessing.smk"
+

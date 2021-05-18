@@ -1,0 +1,1 @@
+This folder will be used to download the HG38 build of the human reference genome. This step is performed in the SummitFASTA.smk snakemake rule, emmediately prior to running the SummitFASTA.R code.

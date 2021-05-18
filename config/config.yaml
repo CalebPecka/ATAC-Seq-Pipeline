@@ -1,0 +1,71 @@
+# This file contains parameters to modify and run the entire workflow.
+# Samples should be entered as fileNames in the configuration file separated by commas as a list.
+samples: 
+  ["/data/0f6c309e-85e4-4c7d-9303-c9973f3b2029/d807fac9-5739-4bb4-a52d-a86c066e2cae_atacseq_gdc_realn.bam",
+  "/data/3c39bb2a-afcb-4c6e-ad12-51762031fe2a/a8aaa98c-33e1-4137-acdb-e09733a20d1c_atacseq_gdc_realn.bam",
+  "/data/3f8d9583-40ab-4fe1-8670-bfd66c3bd01a/827122b7-d85e-4b7e-bf91-0667e7c577c9_atacseq_gdc_realn.bam",
+  "/data/3fa2977b-8a47-41f1-aff4-a4b1b3a65ef5/7e71227a-8d14-4457-be68-a4529eda11de_atacseq_gdc_realn.bam",
+  "/data/4adabc9b-445f-4097-8767-f9c73877dbd0/168410db-0f76-4abd-8683-37245b4a3fd4_atacseq_gdc_realn.bam",
+  "/data/5df0f0b2-daf5-4217-84b9-208dfa73bb23/acf7578c-55e0-4100-8a91-1b46f6e97417_atacseq_gdc_realn.bam",
+  "/data/6ccce23a-cc68-4a8b-87d7-ef6f19a35eb7/e1ec684e-1e8e-4d51-a8aa-74133f804e2e_atacseq_gdc_realn.bam",
+  "/data/7e36519d-a8ce-4434-8543-bc3cdf339163/fa1500d1-8290-4f30-8ab8-5d712fdde1f1_atacseq_gdc_realn.bam",
+  "/data/09f07ab3-13fb-4d17-9a82-c041c4f25106/37b033d0-c231-4e5e-a863-7576c6dd115e_atacseq_gdc_realn.bam",
+  "/data/15e709d0-4557-455f-a193-d32a574454e4/180e986e-2f5f-4885-b53b-b84251a691e4_atacseq_gdc_realn.bam",
+  "/data/20acfa80-fe09-47a6-85e3-965d57a5302a/eedca752-bfb9-4a73-a800-613aa1f5fe27_atacseq_gdc_realn.bam",
+  "/data/48a36c62-c52d-44f8-9701-d32e8d312fa7/1ea5af82-6950-4d8d-b0f9-90bb8fd0448c_atacseq_gdc_realn.bam",
+  "/data/51e3e4b1-5eda-4b4a-8770-b8c09ec6bda5/feccc9ed-3000-4549-be59-9604929f5b23_atacseq_gdc_realn.bam",
+  "/data/53c2ddb5-c794-419f-8e0e-2896bd18115d/5f2dd372-8663-4a99-a22d-23bdceb4ba62_atacseq_gdc_realn.bam",
+  "/data/57b83074-0bfa-4d35-9e01-ac4765e42f9b/380ec737-1741-4e80-8f98-75e176e9c34a_atacseq_gdc_realn.bam",
+  "/data/71aab60e-7a8d-4c81-9041-92b6851717d4/63fec5bd-3184-4974-a1b7-a43b82e1ae9c_atacseq_gdc_realn.bam",
+  "/data/82af0239-fe3a-44a8-979d-7dc577b401d4/a7cbd414-365a-452a-96f9-ab5198e933fe_atacseq_gdc_realn.bam",
+  "/data/93d5a265-c116-4179-9fd7-8057d4b53527/8ec8671c-c191-45d2-87f8-d79d504326bf_atacseq_gdc_realn.bam",
+  "/data/445a9002-21d6-43cd-95bc-fb16d1cb3000/26d27bf5-bd7e-4f88-b114-db0ae94d44c6_atacseq_gdc_realn.bam",
+  "/data/878ddae0-16a3-429c-aa98-1cdaa45aec12/ff4d2e83-f6aa-4e98-ae75-11a97a7d8253_atacseq_gdc_realn.bam",
+  "/data/2114c62c-e019-4b75-a464-33515ef27a65/e1a56c37-154e-4a69-9d4b-d489267a9a7d_atacseq_gdc_realn.bam",
+  "/data/2200f63d-2388-44cb-846f-6bc4659a58a2/1b9bdcf6-29d1-41b9-a0d3-65b86fe48d27_atacseq_gdc_realn.bam",
+  "/data/5115ddef-14a3-4dca-ad3a-3a28fc492948/2297401d-07a2-440c-b4d2-b0860a7f32d2_atacseq_gdc_realn.bam",
+  "/data/8107fe8a-1574-46cf-8391-35917881215d/150b94f2-7364-4440-a83f-f6320cc2c113_atacseq_gdc_realn.bam",
+  "/data/24610c6b-8ffb-4676-bbd3-d7d45d243d5f/30da6264-4d42-445e-ac4f-79031c3bf564_atacseq_gdc_realn.bam",
+  "/data/0661151c-062d-4c42-9aed-85d34c798296/8b1082ef-9799-4955-b608-2c19234eb900_atacseq_gdc_realn.bam",
+  "/data/88773318-d50f-457a-87ae-a7aeb532006d/63f82691-8633-4d46-bb4c-64f88bd63db2_atacseq_gdc_realn.bam",
+  "/data/b7726b78-a909-48f8-b6e6-9649306c2f37/7733c4a8-9be5-48f2-9856-04fbd03ecd06_atacseq_gdc_realn.bam",
+  "/data/c50c818f-8414-4ad8-9804-c213ed8e46e7/0b069d38-db2f-4d3d-99aa-0533e7e77b19_atacseq_gdc_realn.bam",
+  "/data/c89d9f1e-6a5a-425e-8837-a5ae2e79985c/64897d43-7b88-4a0b-bb59-b0004dd70c84_atacseq_gdc_realn.bam",
+  "/data/c111932f-2e3e-4759-b254-617feeef83c2/f4633d64-46d1-4606-9edd-5ed988e17857_atacseq_gdc_realn.bam",
+  "/data/d2ba609a-bcd8-44e0-b304-f96fb782d884/cc10607b-55a0-4363-8fa4-5eb0233d0da5_atacseq_gdc_realn.bam",
+  "/data/ddd55e5f-8201-4436-a111-df2bb94699b8/1a6a2a26-95a3-484d-8fb0-9e1835724d1e_atacseq_gdc_realn.bam",
+  "/data/e5f9d02e-e163-4278-997a-99a1801beeaa/dc37d503-99a4-4968-bf4f-990f42c5e58a_atacseq_gdc_realn.bam",
+  "/data/ec08ad66-e049-428e-b208-14875c13d6aa/b717654b-83f8-4586-8a44-536ce9d81bc8_atacseq_gdc_realn.bam",
+  "/data/eea501f4-39cb-46e0-aaa9-a2c38a16ae9a/7325f6da-cfe5-4f3f-ba7a-51f79a9ee8eb_atacseq_gdc_realn.bam",
+  "/data/f42c9337-d652-4628-aa20-def1db01edf0/75c84547-f7c8-41a7-8b32-517056acfc03_atacseq_gdc_realn.bam",
+  "/data/f79b3ff8-d1bf-44a7-9a4e-c2516f396597/bb4621d0-9935-4542-b35c-7b1173dac60f_atacseq_gdc_realn.bam",
+  "/data/f345793a-b68e-455f-a2e5-d860b713ded9/d3f97380-2b8b-439a-89ea-58a5795e5ec2_atacseq_gdc_realn.bam",
+  "/data/fdf00e03-5eb3-4bb8-be74-8bb2662fd434/552d580e-6346-4127-8859-6d1714ce33e1_atacseq_gdc_realn.bam",
+  "/data/fe638d26-4545-447f-bf43-a137611b51b7/352d082b-e820-4ee7-9e66-a4e7cff9dcbb_atacseq_gdc_realn.bam"]
+
+# Choose "hs" for Homo sapiens. Choosing another value for MACS2 will require a separate 
+# download for a reference genome as well as a GTF file for the chromosomal location of genes.
+genomeType: "hs"
+
+# Initial file type. This pipeline assumes you are starting with a BAM file, and is incapable
+# of processing raw FASTA files with indexing methods like BOWTIE2, etc.
+peakFileType: "BAM"
+
+# P value for the peaks that are to be included in the final MACS2 output.
+peakPVal: "0.05"
+
+# File containing the bp positions of genes in the matching reference genome.
+gtf: "../config/GTFgenes.tsv"
+
+# Size of DNA motifs. If a peak is identified, the DNA sequence around that region is
+# suspected to contain a transcription factor binding site (TFBS). If a value of 100 is used, the
+# region 50 base pairs upstream and downstream of each peak site is analyzed for a TFBS.
+motifSize: "100"
+
+# BCrank collects this many motifs every time it is ran.
+restartSize: "10"
+
+# BCrank is repeatedly run 'seedSize' number of times. Each time, it is ran with a different
+# seed, starting at 1 and ending at the variable number below. In total, this pipeline will
+# generate 'n' motifs, where 'n' is restartSize multiplied by seedSize. 
+seedSize: "3"
