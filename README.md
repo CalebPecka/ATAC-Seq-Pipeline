@@ -25,22 +25,6 @@ If you have any issues with installation, see more info at: https://snakemake.re
 
 This repository assumes you have already processed your raw fastq files, and your data is formatted as a series of .bam files, one per sample. The entire pipeline can be run with the *macro.sh* script after performing initialization. If you encounter difficulties, documentation for each command can be seen in the sections below.
 
-**Using the Macro Scripts**
-
-In your main directory, run the *initialization.sh* script. This creates a conda environment for you which installs package depencies for R version 4.0 and downloads the HG38 human reference genome.
-
-If you wish to visualize genomic tracks in future steps, use the following commands to install to your environment:
-  - conda install -c bioconda -c conda-forge pygenometracks python=3.7
-  - conda install -c bioconda deeptools
-  
-For each sample, run the *macro.sh* script with 3 arguments. The first being your input .bam file, the second being an output directory.
-For example:
-
-  -*sh macro.sh /data/fooFileLocation/3c39.bam /MACS2_out/*
-  
-  Make sure to include a "/" at the end of your directory reference, seen in the example above.
-  
-This command generally takes an hour or two to complete.
 
 Once finished, your *tracks.ini* file can be used to visualize open chromatin regions side-by-side with bp gene locations. When you want to plot a region of the genome, use: *pyGenomeTracks --tracks tracks.ini --region chr15:2,500,000-2,800,000 - bigwig.png*, with variables adjusted to visualize the correct chromosome region. I recommend using a base pair range of ~300,000 so that the gene names are easily readible.
 
@@ -48,7 +32,9 @@ The *tracks.ini* file has many visual customization options. Here is some exampl
 
 # How to Use
 
-Each of the programs, inputs, and outputs for this program can be visualized in the diagram at the top of this documentation. Input/output files are colored yellow, and scripts are colored blue. Some files are required inputs for multiple steps. If you choose to perform the pipeline manually, there is no set order when executing each script. Instead, it is easier to follow the arrows on the diagram, and ensure each required input exists in your directory before executing the next script. Below you will find two sections for **Scripts** and **Input/Output Files**, each containing descriptions and requirements for each object in the diagram. To run the pipeline, follow each blue script box, and execute their commands included below.
+![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__graphics__/Programatic_Visualization.png)
+
+Each of the programs, inputs, and outputs for this program can be visualized in the diagrams seen above. Input/output files are colored yellow, and scripts are colored blue. Some files are required inputs for multiple steps. If you choose to perform the pipeline manually, there is no set order when executing each script. Instead, it is easier to follow the arrows on the diagram, and ensure each required input exists in your directory before executing the next script (_Note that Snakemake does this for you!_). Below you will find two sections for **Scripts** and **Input/Output Files**, each containing explanations and requirements for each object in the diagram. 
 
 # Scripts
 
