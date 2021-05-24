@@ -1,6 +1,13 @@
 # ATAC-Seq-Pipeline
 
 
+# Project Overview
+This pipeline is designed to take a set of input BAM files and perform ATAC-seq/chip-seq analysis on the data. The pipeline will determine accessible regions of chromatin, motif sequences within those regions, indicative of transcription factor binding sites (TFBS), compare those TFBS to known TFBS from the JASPAR database, align those sequences to the genome, create tracks to dynamically visualize the data, and perform statistical analysis to verify our results.
+
+**The entire pipeline is run using the Python tool "Snakemake".** Snakemake automatically determines missing input files, conda environment requirements/dependencies, and more. Below is a diagram of the files in this directory and there importance. **Most notably,** "_example_files_" contains a subset of the formated data you should expect from the inputs and outputs of this pipeline. "Config" contains a series of parameters and the species reference genome, allowing the user to quickly test how different parameters modify the final results. "Results" contains all of the final outputs in folders separated for each BAM file input into the pipeline. "Workflow" contains the scripts and functions used to run the pipeline in a streamline manner. We do not advise modifying the "Workflow" folder. Instead, rely on the configuration files and Snakemake parameters to modify the pipeline to your needs, if possible.
+
+![ImageOfProjectDirectory](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__graphics__/SnakemakeWorkflow.png)
+
 # Requirements
 
   **R version >= 4.0.0 is required for this project. The correct R version is automatically installed in a new conda environment (ATAC) using the *initialization.sh* script. The *initialization.sh* script includes automated installation that prevents conflicts with package dependencies in R. If you would prefer to set up your own environment, you will have to modify *initialization.sh* and install packages for "Biostrings", "BCRANK", and "seqinr".**
