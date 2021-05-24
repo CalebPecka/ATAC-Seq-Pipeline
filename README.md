@@ -10,7 +10,7 @@ This pipeline is designed to take a set of input BAM files and perform ATAC-seq/
 
 # Requirements
 
-**Snakemake is the only required installation to run this pipeline.** Configuration files within this project will automatically be installed using Snakemake based on the dependencies that existed during the created of this project. In short, we automatically install all of the requirements for you, exactly when each script calls on a dependency. The following commands will install Snakemake to a separate environment for you:
+**Snakemake is the only required installation to run this pipeline.** Configuration files within this project will automatically be installed using Snakemake based on the dependencies that existed during the creation of this project. In short, we automatically install all of the requirements for you, exactly when each script calls on a dependency. The following commands will install Snakemake to a separate environment for you:
   - conda install -n base -c conda-forge mamba
   - conda activate base
   - mamba create -c conda-forge -c bioconda -n snakemake snakemake
@@ -21,7 +21,7 @@ If you have any issues with installation, see more info at: https://snakemake.re
 
 # Workflow Overview
 
-![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/Graphics/Programatic_Visualization.png)
+![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__graphics__/ATACseq_Block_Diagram.png)
 
 This repository assumes you have already processed your raw fastq files, and your data is formatted as a series of .bam files, one per sample. The entire pipeline can be run with the *macro.sh* script after performing initialization. If you encounter difficulties, documentation for each command can be seen in the sections below.
 
