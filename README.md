@@ -10,24 +10,14 @@ This pipeline is designed to take a set of input BAM files and perform ATAC-seq/
 
 # Requirements
 
-  **R version >= 4.0.0 is required for this project. The correct R version is automatically installed in a new conda environment (ATAC) using the *initialization.sh* script. The *initialization.sh* script includes automated installation that prevents conflicts with package dependencies in R. If you would prefer to set up your own environment, you will have to modify *initialization.sh* and install packages for "Biostrings", "BCRANK", and "seqinr".**
-  
-  **This GitHub Pipeline includes an optional branch for track-based visualization of chromatin accessibility. To use this commands, you will have to install the following dependencies in the "ATAC" environment created by *initialization.sh*:**
-  - Python >= 3.6
-  - numpy >= 1.8.0 
-  - scipy >= 0.17.0
-  - py2bit >= 0.1.0
-  - pyBigWig >= 0.3.4
-  - pysam >= 0.8
-  - matplotlib >= 3.1.1
-  - intervaltree >= 2.1.0
-  - hicmatrix >= 0.14
-  - gffutils >= 0.9
+**Snakemake is the only required installation to run this pipeline.** Configuration files within this project will automatically be installed using Snakemake based on the dependencies that existed during the created of this project. In short, we automatically install all of the requirements for you, exactly when each script calls on a dependency. The following commands will install Snakemake to a separate environment for you:
+  - conda install -n base -c conda-forge mamba
+  - conda activate base
+  - mamba create -c conda-forge -c bioconda -n snakemake snakemake
+  - conda activate snakemake
+  - snakemake --help
 
-After the depencies have been installed, the following commands will install the PyGenomeTracks visualization tool to your environment.
-
-  - conda install -c bioconda -c conda-forge pygenometracks python=3.7
-  - conda install -c bioconda deeptools
+If you have any issues with installation, see more info at: https://snakemake.readthedocs.io/en/stable/getting_started/installation.html
 
 # Workflow Overview
 
