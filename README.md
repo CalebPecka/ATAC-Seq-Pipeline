@@ -23,12 +23,11 @@ If you have any issues with installation, see more info at: https://snakemake.re
 
 ![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__graphics__/ATACseq_Block_Diagram.png)
 
-This repository assumes you have already processed your raw fastq files, and your data is formatted as a series of .bam files, one per sample. The entire pipeline can be run with the *macro.sh* script after performing initialization. If you encounter difficulties, documentation for each command can be seen in the sections below.
+This repository assumes you have already processed your raw fastq files, and your data is formatted as a series of .bam files, one per sample. Afterwards we use MACS2 to perform _Peak Calling_, a technique that identifies accessible regions of chromatin in DNA. From there we perform _Motif Identification_ to determine putative transcription factor binding sites with these peaks. JASPAR is used as a database of known transcription factors for _Motif Comparison_. _Site Matching_ is performed to align these sequences against our FASTA sequences to determine which transcription factors bind upstream to which genes. Finally, all of these files can be incorperated together into a _Track Based Visualization_ like the example seen below:
 
+![Track](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__graphics__/SLCO4A1.3c39.genomeTrack.png)
 
-Once finished, your *tracks.ini* file can be used to visualize open chromatin regions side-by-side with bp gene locations. When you want to plot a region of the genome, use: *pyGenomeTracks --tracks tracks.ini --region chr15:2,500,000-2,800,000 - bigwig.png*, with variables adjusted to visualize the correct chromosome region. I recommend using a base pair range of ~300,000 so that the gene names are easily readible.
-
-The *tracks.ini* file has many visual customization options. Here is some example code to give you an idea of what objects you might want to include: https://pygenometracks.readthedocs.io/en/latest/content/examples.html
+The entire pipeline can be run using Snakemake. If you encounter difficulties, documentation for each command can be seen in the sections below.
 
 # How to Use
 
@@ -36,6 +35,10 @@ The *tracks.ini* file has many visual customization options. Here is some exampl
  - snakemake "../results/{A,B,C,D,E}.results/matchingSiteTable.csv" --use-conda --cores N
  
 Where A, B, C, D, and E are any number of BAM files you wish to analyze, delimited by commas. _--cores N_ is used to indicate the number of cores you wish to use. Snakemake will automatically determine which steps of the pipeline can be performed based on the files that have been created, and start a new processes using new cores to optimize the speed of the workflow.
+
+Once finished, your *tracks.ini* file can be used to visualize open chromatin regions side-by-side with bp gene locations. When you want to plot a region of the genome, use: *pyGenomeTracks --tracks tracks.ini --region chr15:2,500,000-2,800,000 - bigwig.png*, with variables adjusted to visualize the correct chromosome region. I recommend using a base pair range of ~300,000 so that the gene names are easily readible.
+
+The *tracks.ini* file has many visual customization options. Here is some example code to give you an idea of what objects you might want to include: https://pygenometracks.readthedocs.io/en/latest/content/examples.html
 
 ![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__graphics__/Color_Coded_Visualization.png)
 
