@@ -32,9 +32,14 @@ The *tracks.ini* file has many visual customization options. Here is some exampl
 
 # How to Use
 
-![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__graphics__/Programatic_Visualization.png)
+**To run the entire pipeline, use the following command:**
+ - snakemake "../results/{A,B,C,D,E}.results/matchingSiteTable.csv" --use-conda --cores N
+ 
+Where A, B, C, D, and E are any number of BAM files you wish to analyze, delimited by commas. _--cores N_ is used to indicate the number of cores you wish to use. Snakemake will automatically determine which steps of the pipeline can be performed based on the files that have been created, and start a new processes using new cores to optimize the speed of the workflow.
 
-Each of the programs, inputs, and outputs for this program can be visualized in the diagrams seen above. Input/output files are colored yellow, and scripts are colored blue. Some files are required inputs for multiple steps. If you choose to perform the pipeline manually, there is no set order when executing each script. Instead, it is easier to follow the arrows on the diagram, and ensure each required input exists in your directory before executing the next script (_Note that Snakemake does this for you!_). Below you will find two sections for **Scripts** and **Input/Output Files**, each containing explanations and requirements for each object in the diagram. 
+![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__graphics__/Color_Coded_Visualization.png)
+
+Each of the programs, inputs, and outputs for this program can be visualized in the diagrams seen above. Each step of the pipeline has been color coded based on the goal we are trying to achieve (See matching color diagram in "Workflow Overview"). If you choose to perform the pipeline manually, there is no set order when executing each script. Instead, it is easier to follow the arrows on the diagram, and ensure each required input exists in your directory before executing the next script (_Note that Snakemake does this for you!_). In the Workflow directory, you will find an additional Markdown document with two sections for **Scripts** and **Input/Output Files**, each containing explanations and requirements for each object in the diagram. The diagram in the Workflow markdown is a copy of the diagram above, except Input/output files have been colored yellow, scripts are colored blue, and databases are colored red.
 
 # Scripts
 
