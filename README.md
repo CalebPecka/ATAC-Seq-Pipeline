@@ -43,7 +43,7 @@ Each of the programs, inputs, and outputs for this program can be visualized in 
 
 # Scripts
 
-![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__graphics__/Programmatic_Visualization.png)
+![ImageOfWorkflow](https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__graphics__/Programatic_Visualization.png)
 
 ## MACS2
 Command: **macs2 callpeak -t $1 -g hs -f BAM -p 0.05 --seed 0 --bdg --outdir .**
