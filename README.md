@@ -77,7 +77,9 @@ Command: **Rscript scripts/NarrowPeakSummitTracker.R {input.gtf} {input.NApeak} 
 The R scripts in this pipeline function off of an ordered series of arguments that is passed to the script.
 
   --'{input.gtf}' is a precreated file in the GitHub repository that lists the locations of genes relative to the Hg38 _Homo sapiens_ reference genome.
+  
   --'{input.NApeak}' identifies that we're using a human sequence.
+  
   --'{output}' is the location where the output file will be saved..
 
 The goal of this function is to locate every instance of an accessible chromatin region that is within a 1000 base upstream region of genes in the human genome (likely locations to include a transcription factor binding site). The *GFFgenes.bed* file is used to find start locations of genes, and find summits from the MACS2 output *(NA_peaks.narrowPeak)* that are within the desired range of the gene. The output file *upstreamPeaks.tsv* stores information about the accessible chromatin regions location, including chromosome number, and start/stop base-pair (bp) numbers. *upstreamPeaks.tsv* also stored valuable information such as the name of genes that were discovered downstream, and the q-score of the peak region where it was identified. The q-score helps us estimate how confident the program was that it identified a chromatin accessible peak region.
@@ -91,8 +93,11 @@ Command: **curl -LJO ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Euka
 This command requires 2 steps. First, we check if you currently have the Hg38 reference genome build installed. If not, it is downloaded to a separate directory in the Config folder of this repository. Only then do we call the R script for the next step.
 
   --'{input.refGenome}' is the location of the reference genome we just installed.
+  
   --'{input.upstreamPeaks}' is the output of NarrowPeakSummitTracker, detailing the locations of peaks that are likely to regulate downstream genes.
+  
   --'{params.motifSize}' is the size of the FASTA sequences surrounding the summit location of the peaks from the input.upstreamPeaks file. For example, if we were to pick a value of 100, the script would output a FASTA sequence 100 base-pairs long surrounding the highest point of chromatin accessible from every row in the input.upstreamPeaks file.
+  
   --'{output}' is the location where the output file will be saved..
   
 Once we've collected the LOCATION of potential transcription factor binding sites (TFBS) from *NarrowPeakSummitTracker.R*, we need to determine the sequence of the TFBS. Problematically, the real TFBS can be located anywhere within the accessible chromatin region, which can sometimes be thousands of bases long. At the peak location of each accessible chromatin region (defined by the highest density of sequence fragment overlap), the surrounding nucleotide sequence is stored in a new FASTA file called *upstreamPeak_sequences.tsv*. The size of the nucleotide search space can be modified by the user. By default, the script searches for a 100 bp region surrounding each summit.
@@ -103,9 +108,12 @@ An example of the output can be found here: https://github.com/CalebPecka/ATAC-S
 ## BCrank.R
 Command: **Rscript scripts/BCrank.R {params.seedSize} {params.restartSize} {input.seq} {output}**
 
-  --'{params.seedSize}' is used to determine the number of motifs generated for each sample. The total number of motifs equals {params.seedSize} multiplied by {params.restartSize}. **This value has a maximum of 
+  --'{params.seedSize}' is used to determine the number of motifs generated for each sample. The total number of motifs equals {params.seedSize} multiplied by {params.restartSize}. **This value has a maximum of 20**.
+  
   --'{params.restartSize}' is used to determine the number of motifs generated for each sample. The total number of motifs equals {params.seedSize} multiplied by {params.restartSize}. For example, a seedSize of 3 and a restartSize of 5 will output __3*5=15 seeds__.
+  
   --'{input.seq}' is a FASTA file output from SummitFASTA.R.
+  
   --'{output}' is the location where the output file will be saved..
 
 BCRANK is tool that, when provided a list of FASTA sequences, determines frequently repeated motif sequences. In our case, repeat motif sequences are likely to be important structural components to a TFBS. BCRank requires the input to be ordered according to confidence level. Our script automatically sorts the data according to q-score, the confidence level provided by MACS2. By default, the BCrank program is repeated 12 times with different randomly generated seeds, each producing 100 motifs. The motifs are stored in a new directory *BCrankOutput/*.
@@ -116,9 +124,13 @@ An example of the output can be found here: https://github.com/CalebPecka/ATAC-S
 Command: **Rscript scripts/BCrankProcessing.R {params.seedSize} {input.directory} {input.seq} {input.NApeak} {output}**
 
   --'{params.seedSize}' is used to determine the number of motifs generated for each sample. The total number of motifs equals {params.seedSize} multiplied by {params.restartSize}. This value should be the same as used in BCrank.R.
+  
   --'{input.directory}' is the directory of BCrank motifs output from BCrank.R.
+  
   --'{input.seq}' is a FASTA file output from SummitFASTA.R.
+  
   --'{input.seq}' is the NarrowPeak data output from MACS2.
+  
   --'{output}' is the location where the output file will be saved..
 
 The results from the BCrankOutput/ directory are useless by themselves. The BCrankProcessing.R script concatenates and subsets the files within the directory to obtain a list of all 1200 motifs that *BCrank.R* previously identified. If you modify the BCrankOutput/ directory in any way, it is possible you can interfere with the programming in BCrankProcessing.R. Once the motifs have been extracted, the script searches for instances of every motif within the *upstreamPeak_sequences.tsv* file. *upstreamPeak_sequences.tsv* is a necessary file to run BCrankProcessing.R, but the file has been removed from the GitHub repository diagram to decrease clutter. BCrankProcessing.R also verifies that each matching site is location within the region of a narrow peak. This calculation is performed by comparing the genomic location data with the previously created file, *NA_peaks.narrowPeak*. The output file *matchingSites.csv* stores any information necessary for remaining scripts.
@@ -138,6 +150,7 @@ Command: **bamCoverage -b {wildcards.sample} -o {output}**
 BamCoverage is a method of converting a bedgraph file to a bigwig file. Our visualization tool, PyGenomeTracks, requires an input file BigWig type. If you don't wish to visualize your results, this step can be ignored. 
 
   --'b' is the parameter used for our input file.
+  
   --'o' is your output directory. In the example command above, we are naming our file to "bigWig_coverage.bw" using the "-o" output parameter.
   
 ## Make Tracks
@@ -153,7 +166,9 @@ Command: **pyGenomeTracks --tracks tracks.ini --region chr1:1000000-4000000 -o i
 PyGenomeTracks is the visualization command for the pipeline. It will plot a layered track of the data from the input "track.ini".
 
   --'tracks' is the parameter to indicate your input file. Must be type .ini.
+  
   --'region' indicates the chromosomal location you want to visualize. It is formated where the abbreviated chromosome name is included first, followed by the base-pair region, separating start and stop position by a hyphen. The chromosomal range shown above starts at 1 million and ends at 4 million. 
+  
   --'o' is your output directory/file name.
   
 ## TomTom (Part 1)
