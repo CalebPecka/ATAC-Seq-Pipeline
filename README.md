@@ -56,11 +56,17 @@ Command: **macs2 callpeak -t {sample} -g {params.genomeType} -f {params.peakFile
 MACS2 is our peakcalling method. Open chromatin regions can be identified by regions where reads have piled up more than the background coverage.
 
   --'t' is the parameter used for our input file.
+  
   --'g hs' identifies that we're using a human sequence.
+  
   --'f' identifies our input file type, in this case bam.
+  
   --'p' is our pvalue for identifying if the piled reads are significantly more accessible than the background coverage. These results are tabulated in a narrowPeaks file for future usage.
+  
   --'seed' is a randomly generated started value which can be used to create reproducible results.
+  
   --'bdg' indicates that we'd like to also create a bedgraph file, which we later convert to a bigwig file, a common file type for visualizing open chromatin regions. The existing pipeline uses a slightly different approach, and we will instead create a bigwig file using the BamCoverage command from DeepTools. 
+  
   --'outdir' is our ouput directory. By including a dot, '.', we are telling the computer to send all output files to the current directory.
   
 The final output is a narrowPeak file listing a series of peaks and some information about the significance/relative fold change of each peak. An example of the output can be found here: https://github.com/CalebPecka/ATAC-Seq-Pipeline/blob/master/__example_files__/NA_peaks%5BEXAMPLE%5D.narrowPeak
