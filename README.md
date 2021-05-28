@@ -31,10 +31,14 @@ The entire pipeline can be run using Snakemake. If you encounter difficulties, d
 
 # How to Use
 
-**To run the entire pipeline, use the following command:**
+**To run the entire pipeline, use the following commands:**
+ - cd workflow
+ - sh scripts/createCondaConfigurations.sh
  - snakemake "../results/{A,B,C,D,E}.results/matchingSiteTable.csv" --use-conda --cores N
  
 Where A, B, C, D, and E are any number of BAM files you wish to analyze, delimited by commas. _--cores N_ is used to indicate the number of cores you wish to use. Snakemake will automatically determine which steps of the pipeline can be performed based on the files that have been created, and start a new processes using new cores to optimize the speed of the workflow.
+
+The pipeline must be run from within the "workflow" directory (where Snakefile is located). The shell scripts (scripts/createCondaConfigurations) will download all necessary dependencies in a series of conda environments for you. We've precreated several conda configuration files that perfectly replicate the original conditions of the experiment on macOS. If you would rather try those dependencies, go into "config/config.yaml" and change the "perfectCondaReplication" parameter to "TRUE". Additional parameters for the pipeline can be modified in the "config/config.yaml" file, including file types, p-value thresholds, gtf files, and more. **The location of sample BAM files {A,B,C,D,E}, should also be modified in this location before running the pipeline.**
 
 Once finished, your *tracks.ini* file can be used to visualize open chromatin regions side-by-side with bp gene locations. When you want to plot a region of the genome, use: *pyGenomeTracks --tracks tracks.ini --region chr15:2,500,000-2,800,000 - bigwig.png*, with variables adjusted to visualize the correct chromosome region. I recommend using a base pair range of ~300,000 so that the gene names are easily readible.
 
