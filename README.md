@@ -11,6 +11,15 @@ This pipeline is designed to take a set of input BAM files and perform ATAC-seq/
 # Requirements
 
 **Snakemake is the only required installation to run this pipeline.** Configuration files within this project will automatically be installed using Snakemake based on the dependencies that existed during the creation of this project. In short, we automatically install all of the requirements for you, exactly when each script calls on a dependency. The following commands will install Snakemake to a separate environment for you:
+
+**Option 1:** Standard Conda Installation
+  - conda activate base
+  - conda create -c conda-forge -c bioconda -n snakemake snakemake
+  - conda activate snakemake
+  - snakemake --help
+
+**Option 2:** Mamba Installation
+Mamba is a faster version of conda that snakemake recommends. Both Conda and Mamba work equally well in our experience.
   - conda install -n base -c conda-forge mamba
   - conda activate base
   - mamba create -c conda-forge -c bioconda -n snakemake snakemake
