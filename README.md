@@ -19,6 +19,7 @@ This pipeline is designed to take a set of input BAM files and perform ATAC-seq/
   - snakemake --help
 
 **Option 2:** Mamba Installation
+
 Mamba is a faster version of conda that snakemake recommends. Both Conda and Mamba work equally well in our experience.
   - conda install -n base -c conda-forge mamba
   - conda activate base
