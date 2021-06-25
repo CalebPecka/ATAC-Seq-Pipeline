@@ -44,7 +44,7 @@ The entire pipeline can be run using Snakemake. If you encounter difficulties, d
 **To run the entire pipeline, use the following commands:**
  - cd workflow
  - sh scripts/createCondaConfigurations.sh
- - snakemake "../results/{A,B,C,D,E}.results/matchingSiteTable.csv" --use-conda --cores N
+ - snakemake ../results/{A,B,C,D,E}.results/matchingSiteTable.csv --use-conda --cores N
  
 Where A, B, C, D, and E are any number of BAM files you wish to analyze, delimited by commas. _--cores N_ is used to indicate the number of cores you wish to use. Snakemake will automatically determine which steps of the pipeline can be performed based on the files that have been created, and start a new processes using new cores to optimize the speed of the workflow.
 
