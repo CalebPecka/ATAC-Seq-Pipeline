@@ -60,10 +60,47 @@ for (site in 1:nrow(outFile)){
   # where the value of MotifSize is the length of the final motif in units 
   # of bp. Each chromsome is handled in a separate switch condition to prevent 
   # undesired bp start site duplications.
-  startPos = as.numeric(subject[2]) - MotifSize
-  endPos = as.numeric(subject[2]) + MotifSize
+  startPos = as.numeric(as.character(subject[[3]])) - MotifSize
+  endPos = as.numeric(as.character(subject[[3]])) + MotifSize
+
+  # We must also account for niche scenarios in which the positions exceed
+  # the size of the reference genome, due to the +- 1000 bp search range
+  # from the NarrowPeakSummitTracker.R script.
+  ogStartPos = startPos
+  startPos = max(1, startPos)
+  endPos = max(2, endPos)
+  genomeSize <- switch (as.character(subject[[1]]),
+                 "chr1" = length(chr1[[1]]),
+                 "chr2" = length(chr2[[1]]),
+                 "chr3" = length(chr3[[1]]),
+                 "chr4" = length(chr4[[1]]),
+                 "chr5" = length(chr5[[1]]),
+                 "chr6" = length(chr6[[1]]),
+                 "chr7" = length(chr7[[1]]),
+                 "chr8" = length(chr8[[1]]),
+                 "chr9" = length(chr9[[1]]),
+                 "chr10" = length(chr10[[1]]),
+                 "chr11" = length(chr11[[1]]),
+                 "chr12" = length(chr12[[1]]),
+                 "chr13" = length(chr13[[1]]),
+                 "chr14" = length(chr14[[1]]),
+                 "chr15" = length(chr15[[1]]),
+                 "chr16" = length(chr16[[1]]),
+                 "chr17" = length(chr17[[1]]),
+                 "chr18" = length(chr18[[1]]),
+                 "chr19" = length(chr19[[1]]),
+                 "chr20" = length(chr20[[1]]),
+                 "chr21" = length(chr21[[1]]),
+                 "chr22" = length(chr22[[1]]),
+                 "chrX" = length(chrX[[1]]),
+                 "chrY" = length(chrY[[1]]),
+                 "chrM" = length(chrM[[1]])
+  )
+  startPos = min(genomeSize - 1, startPos)
+  endPos = min(genomeSize, endPos)
   
-  seq <- switch (subject[[1]],
+  # Finally, we collect the sequence based on the chromosome.
+  seq <- switch (as.character(subject[[1]]),
                  "chr1" = BStringSet(chr1, start = startPos, end = endPos),
                  "chr2" = BStringSet(chr2, start = startPos, end = endPos),
                  "chr3" = BStringSet(chr3, start = startPos, end = endPos),
@@ -94,18 +131,23 @@ for (site in 1:nrow(outFile)){
   # All of the data is restructured into a FASTA file with a modified header.
   # The header is a colon separated file included the chromosomal location of 
   # each FASTA sequence and the name of the gene associated with it.
-  newHeader <- paste(c(">", subject[1], ":",
-                       as.character(startPos), "-",
+  newHeader <- paste(c(">", as.character(subject[[1]]), ":",
+                       as.character(ogStartPos), "-",
                        as.character(endPos), ":",
-                       subject[4], ":",
-                       subject[5], ":",
-                       subject[6]), collapse = '')
-  motifFile <- append(motifFile, newHeader)
-  # After the header has been added, we add the DNA sequence.
-  motifFile <- append(motifFile, as.character(seq))
+                       as.character(subject[[5]]), ":",
+                       as.character(subject[[6]]), ":",
+                       subject[[7]]), collapse = '')
+
+  # To prevent duplicates, we check if the header ID is already in the list,
+  # and only keep FASTA sequences that are NOT repeats.
+  if (newHeader %in% motifFile == F){
+    motifFile <- append(motifFile, newHeader)
+    # After the header has been added, we add the DNA sequence.
+    motifFile <- append(motifFile, as.character(seq))
   
-  # We keep track of the qValues so we can reorder the data later on.
-  qVal <- append(qVal, c(subject[3], subject[3]))
+    # We keep track of the qValues so we can reorder the data later on.
+    qVal <- append(qVal, c(as.numeric(as.character(subject[[4]])), as.numeric(as.character(subject[[4]]))))
+  }
 }
 
 secondOut <- data.frame(motifFile) # Convert data to dataframe file format.

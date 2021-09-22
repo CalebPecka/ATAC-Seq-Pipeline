@@ -1,19 +1,24 @@
 # Load configuration file with sample data.
 configfile: "../config/config.yaml"
 
+perfectConfig=config["perfectCondaReplication"]
+if perfectConfig == "TRUE":
+	condaLocation="../envs/R.yaml"
+else:
+	condaLocation="../envs/Rconfig.yaml"
+
 rule BCrankProcessing:
 	input:
-		bam=expand("{sample}", sample=config["samples"]),
-		directory=("../results/{input.bam}.results/BCrankOutput/"),
-		seq="../results/{input.bam}.results/upstreamPeak_Sequences.fasta",
-		NApeak="../results/{input.bam}.results/NA_peaks.narrowPeak"
+		directory="../results/{sample}.results/BCrankOutput/",
+		seq="../results/{sample}.results/upstreamPeak_Sequences.fasta",
+		NApeak="../results/{sample}.results/NA_peaks.narrowPeak"
 	output:
-		"../results/{input.bam}.results/matchingSiteTable.csv"
+		"../results/{sample}.results/matchingSiteTable.csv"
 	params:
 		seedSize=config["seedSize"]
 	conda:
-		"../envs/R.yaml"
+		condaLocation
 	log:
-		"logs/{input.bam}.BCrankProcessing.log"
+		"logs/{sample}.BCrankProcessing.log"
 	shell:
-		"Rscript scripts/BCrankProcessing.R {params.seedSize} {input.directory} {input.seq} {input.NApeak} {output}"
+		"Rscript scripts/BCrankProcessing.R {params.seedSize} {input.directory} {input.seq} {input.NApeak} ../results/{wildcards.sample}.results/matchingSiteTable.csv"

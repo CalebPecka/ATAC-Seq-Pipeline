@@ -6,9 +6,6 @@
 ######################
 library(BCRANK)
 
-library(EnsDb.Hsapiens.v86)
-edb <- EnsDb.Hsapiens.v86
-
 args <- commandArgs(trailingOnly = T) # End line command arguments.
 
 # All of the seeds are separated in the output from BCrank.R. The goal of this 
@@ -19,6 +16,7 @@ args <- commandArgs(trailingOnly = T) # End line command arguments.
 
 seedSize <- as.numeric(args[1])
 file <- args[2]
+file <- paste0(file, "/")
 
 BC_1 <- read.table(paste0(file, "1_BC_consensusSequences.txt"))
 dfnames <- c("BC_1") # "dfnames" keeps track of the BCrank motif objects 
@@ -108,10 +106,11 @@ dfENV <- mget(dfnames, .GlobalEnv)
 # Creates a function that extracts consensus sequences from the BCrank files. 
 # Every other line is a sequence score and is removed. 
 dataExtraction <- function(df) {
-  w <- df[c(FALSE, TRUE),]
-  rowSize <- round(nrow(w) / 2) + 1
-  w <- w[c(1:(rowSize)),]
-  w <- unlist(w)
+  # w <- df[c(FALSE, TRUE),]
+  # rowSize <- round(nrow(w) / 2) + 1
+  # w <- w[c(1:(rowSize)),]
+  # w <- unlist(w)
+  w <- as.character(unlist(unlist(df)))
 }
 
 # Applies the previous function to all dataframes in the environment.
@@ -124,8 +123,10 @@ for (i in dfnames){
   # full consensus list.
   fullConsensusList <- append(fullConsensusList, extracted[[i]])
 }
+
 # When complete, fullConsensusList represents a complete list of the motifs 
 # identified in all trials produced by BCrank.
+fullConsensusList <- unique(fullConsensusList)
 
 
 ############################################
@@ -161,24 +162,17 @@ while(count < length(bindingSiteSearchList) + 1){
       matching <- matchingSites(args[3], 
                                 bindingSiteSearch)
       
-      # The matchingsites() function assumes the input includes either forward 
-      # or reverse strands of DNA. Here we subset our results to only include 
-      # the forward strands.
-      matching <- matching[which(matching$Strand == "+"),] 
-      intermediate <- unlist(strsplit(matching$`Region header`, ':')) # Splits 
-                                                                      # metadata
+      # Here we split the metadata
+      intermediate <- unlist(strsplit(as.character(matching$`Region header`), ':'))
       
       # Now we need to identify the genomic location of each matching site. This
       # data was stored in the upstreamPeak_sequences.fasta file header in the 
       # SummitFASTA.R script. Here, we extract chromosomal location.
-      chrExtraction <- intermediate[seq(1, length(intermediate), 3)]
-      geneExtraction <- intermediate[seq(3, length(intermediate), 3)]
-      
-      # Remove pesky hidden end-line character and ENST decimals.
-      geneExtraction <- substr(geneExtraction,1,nchar(geneExtraction) - 3)
-      
+      chrExtraction <- intermediate[seq(1, length(intermediate), 5)]
+      geneExtraction <- intermediate[seq(3, length(intermediate), 5)]
+            
       # Finds the start and end location of the motif in each sequence.
-      locationExtraction <- intermediate[seq(2, length(intermediate), 3)]
+      locationExtraction <- intermediate[seq(2, length(intermediate), 5)]
       locationIntermediate <- unlist(strsplit(locationExtraction, '-'))
       startPosition <- as.numeric(locationIntermediate[seq(1, 
                                       length(locationIntermediate), 2)]) + 
@@ -196,6 +190,8 @@ while(count < length(bindingSiteSearchList) + 1){
       geneName <- append(geneName, geneExtraction)
       start <- append(start, startPosition)
       end <- append(end, endPosition)
+
+      print(paste0("Matching site search complete for binding site ", count))
     },
     
     # If an error occurs during the previous process, a message tells the user 
@@ -210,7 +206,7 @@ while(count < length(bindingSiteSearchList) + 1){
                   "has been removed from the binding site search list."))
       
       # doNotUse keeps track of which consensus sequences failed.
-      doNotUse <<- append(doNotUse, count)
+      doNotUse <- append(doNotUse, count)
     },
     
     # Whether the program failed or not, the count meter increases by 1, 
@@ -226,8 +222,10 @@ while(count < length(bindingSiteSearchList) + 1){
 ############################################
 # Dataframe Conversion
 ############################################
-bindingSiteSearchList <- bindingSiteSearchList[-c(doNotUse)] # List of usable 
-                                                             # binding sites.
+if (length(doNotUse) > 0){
+  # If there are any invalid binding sites, removed them.
+  bindingSiteSearchList <- bindingSiteSearchList[-c(doNotUse)]
+}
 
 # Converts collected vector lists into a single data frame.
 out <- cbind(data.frame(consensusSequence), 
@@ -270,6 +268,8 @@ for (chr in uniqueChr){
       hasPeak <- append(hasPeak, FALSE)
     }
   }
+
+  print(paste0("Narrow Peak verification complete for ", chr))
 }
 
 # Appends the hasPeak variable to the dataframe.

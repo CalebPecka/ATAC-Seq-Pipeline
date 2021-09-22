@@ -1,11 +1,14 @@
+# Load configuration file with sample data.
+configfile: "../config/config.yaml"
+
 rule BamCoverage:
 	input:
 		bam=expand("{sample}", sample=config["samples"])
 	output:
-		"../results/{input.bam}.results/bigWigCoverage.bw"
+		"../results/{sample}.results/bigWigCoverage.bw"
 	conda:
 		"../envs/pyGenomeTracks.yaml"
 	log:
-		"logs/{input.bam}.BamCoverage.log"
+		"logs/{sample}.BamCoverage.log"
 	shell:
-		"bamCoverage -b {input.bam} -o {output}"
+		"bamCoverage -b {wildcards.sample} -o {output}"

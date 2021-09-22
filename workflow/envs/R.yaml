@@ -1,4 +1,6 @@
+name: Rconfig
 channels:
+  - r
   - conda-forge
   - bioconda
   - anaconda

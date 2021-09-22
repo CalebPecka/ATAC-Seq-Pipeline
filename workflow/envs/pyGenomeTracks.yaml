@@ -1,3 +1,4 @@
+name: pyGenomeTracksConfig
 channels:
   - conda-forge
   - bioconda

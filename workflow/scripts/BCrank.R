@@ -14,7 +14,7 @@ args <- commandArgs(trailingOnly = T) # End line command arguments.
 # variable). To repeat this process, you can increase the seedSize variable. 
 # The program is repeated using a new random seed a number of times equal to 
 # the seed size. For example, a seedSize value of 12 will produce (12 * 100) = 
-#1200 unique motifs.
+# 1200 unique motifs.
 seedSize <- as.numeric(args[1])
 restartSize <- as.numeric(args[2])
 
@@ -38,12 +38,14 @@ for (seed in 1:seedSize){
   
   BCRANKS <- unlist(toptable(BCRANKout))
   
-  # The output from BCRANK is sent to the console. The printed output from the 
-  # console is saved to a new file.
-  sink(paste0(args[4], seed,"_BC_consensusSequences.txt"))
-  print(BCRANKS)
-  sink()
-  
+  # The output from BCRANK is saved to a new file.
+  motifList <- ""
+  for (i in 1:length(BCRANKout@toplist)){
+    motifList <- paste0(motifList, BCRANKout@toplist[[i]]@final@consensus)
+    motifList <- paste0(motifList, "\n")
+  }
+  write.table(data.frame(motifList), paste0(args[4], seed, "_BC_consensusSequences.txt"), col.names = F, row.names = F, quote = F)
+    
   # We are also interested in comparing these motifs to known motif datasets 
   # using Memesuite tools. Memesuite requires a unique file format. The BCrank 
   # motifs are converted to a MEME file format in this section of code.
@@ -70,6 +72,6 @@ for (seed in 1:seedSize){
   
   # Write output.
   write.table(finalOut, 
-              paste0("args[4]", seed,"_BCRANK_motifs.meme"), 
+              paste0(args[4], seed, "_BCRANK_motifs.meme"), 
               row.names = F, col.names = F, quote = F)
 }
