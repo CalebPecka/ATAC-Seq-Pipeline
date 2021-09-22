@@ -1,18 +1,24 @@
 # Load configuration file with sample data.
 configfile: "../config/config.yaml"
 
+perfectConfig=config["perfectCondaReplication"]
+if perfectConfig == "TRUE":
+	condaLocation="../envs/R.yaml"
+else:
+	condaLocation="../envs/Rconfig.yaml"
+
 rule BCrank:
 	input:
-		bam=expand("{sample}", sample=config["samples"]),
-		seq="../results/{input.bam}.results/upstreamPeak_Sequences.fasta"
+		seq="../results/{sample}.results/upstreamPeak_Sequences.fasta"
 	output:
-		directory("../results/{input.bam}.results/BCrankOutput/")
+		directory("../results/{sample}.results/BCrankOutput/")
 	params:
 		seedSize=config["seedSize"],
 		restartSize=config["restartSize"]
 	conda:
-		"../envs/R.yaml"
+		condaLocation
 	log:
-		"logs/{input.bam}.BCrank.log"
+		"logs/{sample}.BCrank.log"
 	shell:
-		"Rscript scripts/BCrank.R {params.seedSize} {params.restartSize} {input.seq} {output}"
+		"mkdir -p {output} ;"
+		"Rscript scripts/BCrank.R {params.seedSize} {params.restartSize} {input.seq} ../results/{wildcards.sample}.results/BCrankOutput/"

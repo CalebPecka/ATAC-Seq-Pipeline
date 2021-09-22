@@ -67,11 +67,11 @@ for (j in row.names(genesTemp)[1:100]){
   
   if (length(summitsList) != 0){
     for (k in 1:length(summitsList)){
-      outFile <- append(outFile, paste(c("chr1", rowOfInterest$ENST, 
+      outFile <- append(outFile, paste(c("chr1", as.character(rowOfInterest$GeneName), 
                                          summitsList[k], 
                                          summitsQValList[k], 
-                                         rowOfInterest$Symbol, 
-                                         rowOfInterest$Strand, 
+                                         as.character(rowOfInterest$Symbol), 
+                                         as.character(rowOfInterest$Strand), 
                                          summitScoreList[k]), 
                                        collapse = " "))
     }
@@ -160,11 +160,11 @@ if (includePositive)
         for (k in 1:length(summitsList)){
           # An output file is created that stores important variables delimited 
           # by spaces.
-          outFile <- append(outFile, paste(c(chromosome, rowOfInterest$ENST, 
+          outFile <- append(outFile, paste(c(chromosome, as.character(rowOfInterest$GeneName), 
                                              summitsList[k], 
                                              summitsQValList[k], 
-                                             rowOfInterest$Symbol, 
-                                             rowOfInterest$Strand,
+                                             as.character(rowOfInterest$Symbol), 
+                                             as.character(rowOfInterest$Strand),
                                              summitScoreList[k]), 
                                            collapse = "\t"))
         }
@@ -209,11 +209,11 @@ if (includeNegative)
     
       if (length(summitsList) != 0){
         for (k in 1:length(summitsList)){
-          outFile <- append(outFile, paste(c(chromosome, rowOfInterest$ENST, 
+          outFile <- append(outFile, paste(c(chromosome, as.character(rowOfInterest$GeneName), 
                                              summitsList[k], 
                                              summitsQValList[k], 
-                                             rowOfInterest$Symbol, 
-                                             rowOfInterest$Strand,
+                                             as.character(rowOfInterest$Symbol), 
+                                             as.character(rowOfInterest$Strand),
                                              summitScoreList[k]), 
                                            collapse = "\t"))
         }

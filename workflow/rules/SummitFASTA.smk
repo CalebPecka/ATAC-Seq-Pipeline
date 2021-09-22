@@ -1,6 +1,12 @@
 # Load configuration file with sample data.
 configfile: "../config/config.yaml"
 
+perfectConfig=config["perfectCondaReplication"]
+if perfectConfig == "TRUE":
+	condaLocation="../envs/R.yaml"
+else:
+	condaLocation="../envs/Rconfig.yaml"
+
 rule CreateRefGenome:
 	output:
 		"../config/HG38/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz"
@@ -11,16 +17,15 @@ rule CreateRefGenome:
 
 rule SummitFASTA:
 	input:
-		bam=expand("{sample}", sample=config["samples"]),
 		refGenome={rules.CreateRefGenome.output},
-		upstreamPeaks="../results/{input.bam}.results/upstreamPeaks.tsv"
+		upstreamPeaks="../results/{sample}.results/upstreamPeaks.tsv"
 	output:
-		"../results/{input.bam}.results/upstreamPeak_Sequences.fasta"
+		"../results/{sample}.results/upstreamPeak_Sequences.fasta"
 	params:
 		motifSize=config["motifSize"]
 	conda:
-		"../envs/R.yaml"
+		condaLocation
 	log:
-		"logs/{input.bam}.SummitFASTA.log"
+		"logs/{sample}.SummitFASTA.log"
 	shell:
-		"Rscript scripts/SummitFASTA.R {input.refGenome} {input.upstreamPeaks} {params.motifSize} {output}"
+		"Rscript scripts/SummitFASTA.R {input.refGenome} {input.upstreamPeaks} {params.motifSize} ../results/{wildcards.sample}.results/upstreamPeak_Sequences.fasta"

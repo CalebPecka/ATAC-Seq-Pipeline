@@ -1,3 +1,4 @@
+name: MACS2config
 channels:
   - bioconda
   - anaconda
